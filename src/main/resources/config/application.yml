@@ -1,5 +1,6 @@
 url:
   jobservice: http://localhost:8080/api/jobs
+  companyservice: http://localhost:8082/api/companies
   authenticationservice: http://localhost:3000
 
 server:

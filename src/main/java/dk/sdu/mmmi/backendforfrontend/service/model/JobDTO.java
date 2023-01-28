@@ -9,7 +9,7 @@ import java.util.Date;
 @Getter
 @Setter
 @ToString
-public class Job {
+public class JobDTO {
     private Long id;
 
     private String title;
@@ -28,6 +28,5 @@ public class Job {
 
     private Date expiresAt;
 
-    private Long companyId;
-
+    private Company company;
 }

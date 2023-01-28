@@ -1,0 +1,14 @@
+package dk.sdu.mmmi.backendforfrontend.inbound;
+
+import dk.sdu.mmmi.backendforfrontend.service.model.Job;
+import dk.sdu.mmmi.backendforfrontend.service.model.JobDTO;
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
+
+@Mapper
+public interface DTOMapper{
+
+    DTOMapper INSTANCE = Mappers.getMapper(DTOMapper.class);
+
+    JobDTO toJobDTO(Job job);
+}

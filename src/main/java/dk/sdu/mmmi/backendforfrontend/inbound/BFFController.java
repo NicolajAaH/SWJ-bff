@@ -1,12 +1,9 @@
 package dk.sdu.mmmi.backendforfrontend.inbound;
 
-import dk.sdu.mmmi.backendforfrontend.service.model.Job;
+import dk.sdu.mmmi.backendforfrontend.service.model.*;
 import dk.sdu.mmmi.backendforfrontend.service.interfaces.AuthenticationService;
 import dk.sdu.mmmi.backendforfrontend.service.interfaces.CompanyService;
 import dk.sdu.mmmi.backendforfrontend.service.interfaces.JobService;
-import dk.sdu.mmmi.backendforfrontend.service.model.Company;
-import dk.sdu.mmmi.backendforfrontend.service.model.LoginRequest;
-import dk.sdu.mmmi.backendforfrontend.service.model.LogoutRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -26,6 +23,8 @@ public class BFFController {
     private final JobService jobService;
 
     private final AuthenticationService authenticationService;
+
+    private final DTOMapper dtoMapper = DTOMapper.INSTANCE;
 
     @GetMapping("company/{id}")
     public ResponseEntity<Company> getCompany(@PathVariable("id") long id) {
@@ -62,6 +61,19 @@ public class BFFController {
     public Job postJob(@RequestBody Job job) {
         log.info("Job posted: " + job);
         return jobService.createJob(job);
+    }
+
+    @GetMapping("/job/{id}")
+    @CrossOrigin
+    public ResponseEntity<JobDTO> getJobWithCompany(@PathVariable("id") long id) {
+        log.info("Get job: " + id);
+        Job job = jobService.getJob(id);
+        if (job == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        JobDTO jobDTO = dtoMapper.toJobDTO(job);
+        jobDTO.setCompany(companyService.findById(job.getCompanyId()));
+        return new ResponseEntity<>(jobDTO, HttpStatus.OK);
     }
 
     @GetMapping("/job")
