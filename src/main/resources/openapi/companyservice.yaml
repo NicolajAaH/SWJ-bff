@@ -1,0 +1,149 @@
+openapi: "3.0.3"
+info:
+  title: "companyservice API"
+  description: "companyservice API"
+  version: "1.0.0"
+servers:
+  - url: "https://companyservice"
+paths:
+  /api/companies/register:
+    post:
+      summary: "POST api/companies/register"
+      operationId: "registerCompany"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Company"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+  /api/companies/login:
+    post:
+      summary: "POST api/companies/login"
+      operationId: "login"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+  /api/companies/logout:
+    post:
+      summary: "POST api/companies/logout"
+      operationId: "logout"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LogoutRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+  /api/companies/postjob:
+    post:
+      summary: "POST api/companies/postjob"
+      operationId: "postJob"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Job"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+  /api/companies/{id}:
+    put:
+      summary: "PUT api/companies/{id}"
+      operationId: "updateCompany"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Company"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+components:
+  schemas:
+    Company:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        name:
+          type: "string"
+        email:
+          type: "string"
+        website:
+          type: "string"
+        createdAt:
+          type: "string"
+          format: "date-time"
+        updatedAt:
+          type: "string"
+          format: "date-time"
+    LoginRequest:
+      type: "object"
+      properties:
+        email:
+          type: "string"
+        password:
+          type: "string"
+    LogoutRequest:
+      type: "object"
+      properties:
+        token:
+          type: "string"
+    Job:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        title:
+          type: "string"
+        location:
+          type: "string"
+        description:
+          type: "string"
+        jobType:
+          type: "string"
+          enum:
+            - "FRONTEND"
+            - "BACKEND"
+            - "FULLSTACK"
+            - "ARCHITECT"
+            - "DEVOPS"
+            - "QA"
+            - "MANAGER"
+            - "OTHER"
+        salary:
+          type: "number"
+          format: "double"
+        createdAt:
+          type: "string"
+          format: "date-time"
+        updatedAt:
+          type: "string"
+          format: "date-time"
+        expiresAt:
+          type: "string"
+          format: "date-time"
+        company:
+          $ref: "#/components/schemas/Company"

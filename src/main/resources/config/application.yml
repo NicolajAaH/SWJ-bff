@@ -1,0 +1,6 @@
+url:
+  jobservice: http://localhost:8080/api/jobs
+  authenticationservice: http://localhost:3000
+
+server:
+  port: 8081
