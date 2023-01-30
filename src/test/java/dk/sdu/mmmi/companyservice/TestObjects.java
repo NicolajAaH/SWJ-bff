@@ -14,7 +14,7 @@ public class TestObjects {
         job.setSalary(100000.00);
         job.setJobType(JobType.BACKEND);
         job.setCreatedAt(new java.util.Date());
-        job.setCompany(createMockCompany());
+        job.setCompanyId(1L);
         job.setId(1L);
         job.setExpiresAt(new java.util.Date());
         job.setUpdatedAt(new java.util.Date());

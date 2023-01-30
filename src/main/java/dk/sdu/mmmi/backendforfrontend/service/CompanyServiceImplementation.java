@@ -5,10 +5,13 @@ import dk.sdu.mmmi.backendforfrontend.service.model.Company;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -25,14 +28,23 @@ public class CompanyServiceImplementation implements CompanyService {
     @Override
     public List<Company> findAll() {
         log.info("--> findAll");
-        //Company[] companies = restTemplate.getForObject(JOB_SERVICE_URL + "/companies", List.class);
-        return null;
+        Company[] companies = restTemplate.getForObject(JOB_SERVICE_URL + "/companies", Company[].class);
+        if (companies == null){
+            log.error("Error getting companies");
+            return Collections.emptyList();
+        }
+        return List.of(companies);
     }
 
     @Override
     public Company create(Company company) {
         log.info("--> create: {}", company);
-        return null;
+        ResponseEntity<Company> response = restTemplate.postForEntity(JOB_SERVICE_URL, company, Company.class);
+        if(!response.getStatusCode().is2xxSuccessful()){
+            log.error("Error creating job: {}", response.getStatusCode());
+            return null;
+        }
+        return response.getBody();
     }
 
 
@@ -51,11 +63,17 @@ public class CompanyServiceImplementation implements CompanyService {
     public Company update(Long id, Company company) {
         log.info("--> update: {}", company);
         company.setUpdatedAt(new Date());
-        return null;
+        ResponseEntity<Company> response = restTemplate.exchange(JOB_SERVICE_URL + "/" + id, HttpMethod.PUT, new HttpEntity<>(company), Company.class);
+        if(!response.getStatusCode().is2xxSuccessful()){
+            log.error("Error updating job: {}", response.getStatusCode());
+            return null;
+        }
+        return response.getBody();
     }
 
     @Override
     public void delete(Long id) {
         log.info("--> delete: {}", id);
+        restTemplate.delete(JOB_SERVICE_URL + "/" + id);
     }
 }

@@ -1,5 +1,6 @@
 package dk.sdu.mmmi.backendforfrontend.service.interfaces;
 
+import dk.sdu.mmmi.backendforfrontend.service.model.Application;
 import dk.sdu.mmmi.backendforfrontend.service.model.Job;
 
 import java.util.List;
@@ -17,4 +18,5 @@ public interface JobService {
 
     List<Job> getAllJobs();
 
+    void applyForJob(long id, Application application);
 }
