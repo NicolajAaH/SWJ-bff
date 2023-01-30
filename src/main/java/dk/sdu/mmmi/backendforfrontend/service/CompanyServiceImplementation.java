@@ -21,14 +21,14 @@ import java.util.List;
 public class CompanyServiceImplementation implements CompanyService {
 
     @Value("${url.companyservice}")
-    private String JOB_SERVICE_URL;
+    private String COMPANY_SERVICE_URL;
 
     private RestTemplate restTemplate = new RestTemplate();
 
     @Override
     public List<Company> findAll() {
         log.info("--> findAll");
-        Company[] companies = restTemplate.getForObject(JOB_SERVICE_URL + "/companies", Company[].class);
+        Company[] companies = restTemplate.getForObject(COMPANY_SERVICE_URL + "/companies", Company[].class);
         if (companies == null){
             log.error("Error getting companies");
             return Collections.emptyList();
@@ -39,7 +39,7 @@ public class CompanyServiceImplementation implements CompanyService {
     @Override
     public Company create(Company company) {
         log.info("--> create: {}", company);
-        ResponseEntity<Company> response = restTemplate.postForEntity(JOB_SERVICE_URL, company, Company.class);
+        ResponseEntity<Company> response = restTemplate.postForEntity(COMPANY_SERVICE_URL + "/register", company, Company.class);
         if(!response.getStatusCode().is2xxSuccessful()){
             log.error("Error creating job: {}", response.getStatusCode());
             return null;
@@ -51,7 +51,7 @@ public class CompanyServiceImplementation implements CompanyService {
     @Override
     public Company findById(Long id) {
         log.info("--> findById: {}", id);
-        ResponseEntity<Company> response = restTemplate.getForEntity(JOB_SERVICE_URL + "/" + id, Company.class);
+        ResponseEntity<Company> response = restTemplate.getForEntity(COMPANY_SERVICE_URL + "/" + id, Company.class);
         if(!response.getStatusCode().is2xxSuccessful()){
             log.error("Error getting job: {}", response.getStatusCode());
             return null;
@@ -63,7 +63,7 @@ public class CompanyServiceImplementation implements CompanyService {
     public Company update(Long id, Company company) {
         log.info("--> update: {}", company);
         company.setUpdatedAt(new Date());
-        ResponseEntity<Company> response = restTemplate.exchange(JOB_SERVICE_URL + "/" + id, HttpMethod.PUT, new HttpEntity<>(company), Company.class);
+        ResponseEntity<Company> response = restTemplate.exchange(COMPANY_SERVICE_URL + "/" + id, HttpMethod.PUT, new HttpEntity<>(company), Company.class);
         if(!response.getStatusCode().is2xxSuccessful()){
             log.error("Error updating job: {}", response.getStatusCode());
             return null;
@@ -74,6 +74,17 @@ public class CompanyServiceImplementation implements CompanyService {
     @Override
     public void delete(Long id) {
         log.info("--> delete: {}", id);
-        restTemplate.delete(JOB_SERVICE_URL + "/" + id);
+        restTemplate.delete(COMPANY_SERVICE_URL + "/" + id);
+    }
+
+    @Override
+    public Company getCompanyByEmail(String email) {
+        log.info("--> getCompanyByEmail: {}", email);
+        ResponseEntity<Company> response = restTemplate.getForEntity(COMPANY_SERVICE_URL + "/byEmail/" + email, Company.class);
+        if(!response.getStatusCode().is2xxSuccessful()){
+            log.error("Error getting company: {}", response.getStatusCode());
+            return null;
+        }
+        return response.getBody();
     }
 }
