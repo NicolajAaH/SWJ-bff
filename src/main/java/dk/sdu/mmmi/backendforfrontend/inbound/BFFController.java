@@ -1,9 +1,10 @@
 package dk.sdu.mmmi.backendforfrontend.inbound;
 
-import dk.sdu.mmmi.backendforfrontend.service.model.*;
+import com.google.gson.Gson;
 import dk.sdu.mmmi.backendforfrontend.service.interfaces.AuthenticationService;
 import dk.sdu.mmmi.backendforfrontend.service.interfaces.CompanyService;
 import dk.sdu.mmmi.backendforfrontend.service.interfaces.JobService;
+import dk.sdu.mmmi.backendforfrontend.service.model.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,8 @@ public class BFFController {
     private final AuthenticationService authenticationService;
 
     private final DTOMapper dtoMapper = DTOMapper.INSTANCE;
+
+    private Gson gson = new Gson();
 
     @GetMapping("company/{id}")
     public ResponseEntity<Company> getCompany(@PathVariable("id") long id) {
@@ -64,9 +67,12 @@ public class BFFController {
         authenticationService.logout(logoutRequest);
     }
 
-    @PostMapping("/job/postjob")
-    public Job postJob(@RequestBody Job job) {
+    @PostMapping("/job/{email}")
+    public Job postJob(@RequestHeader String email, @RequestBody Job job) {
         log.info("Job posted: " + job);
+        if (job.getCompanyId() == null) {
+            job.setCompanyId(companyService.getCompanyByEmail(email).getId());
+        }
         return jobService.createJob(job);
     }
 
@@ -104,9 +110,7 @@ public class BFFController {
         String base64EncodedBody = split_string[1];
         Base64.Decoder decoder = Base64.getDecoder();
         String body = new String(decoder.decode(base64EncodedBody));
-        String[] split_body = body.split(",");
-        String[] split_id = split_body[0].split(":");
-        return split_id[3];
+        return gson.fromJson(body, JWT.class).getUserId();
     }
 
     @GetMapping("/job")
