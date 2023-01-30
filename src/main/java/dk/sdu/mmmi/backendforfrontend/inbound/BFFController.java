@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/bff")
 @AllArgsConstructor
 @Slf4j
@@ -27,7 +28,6 @@ public class BFFController {
     private final DTOMapper dtoMapper = DTOMapper.INSTANCE;
 
     @GetMapping("company/{id}")
-    @CrossOrigin
     public ResponseEntity<Company> getCompany(@PathVariable("id") long id) {
         log.info("Get company: " + id);
         Company company = companyService.findById(id);
@@ -40,42 +40,36 @@ public class BFFController {
     }
 
     @PostMapping("/companies/register")
-    @CrossOrigin
     public void registerCompany(@RequestBody Company company) {
         log.info("Company registered: " + company);
         companyService.create(company);
     }
 
     @PostMapping("/auth/register")
-    @CrossOrigin
     public void registerUser(@RequestBody User user) {
         log.info("User registered: " + user);
         authenticationService.register(user);
     }
 
     @PostMapping("/auth/login")
-    @CrossOrigin
     public void login(@RequestBody LoginRequest loginRequest) {
         log.info("Company logged in: " + loginRequest);
         authenticationService.login(loginRequest);
     }
 
     @PostMapping("/auth/logout")
-    @CrossOrigin
     public void logout(@RequestBody LogoutRequest logoutRequest) {
         log.info("Company logged out: " + logoutRequest);
         authenticationService.logout(logoutRequest);
     }
 
     @PostMapping("/job/postjob")
-    @CrossOrigin
     public Job postJob(@RequestBody Job job) {
         log.info("Job posted: " + job);
         return jobService.createJob(job);
     }
 
     @GetMapping("/job/{id}")
-    @CrossOrigin
     public ResponseEntity<JobDTO> getJobWithCompany(@PathVariable("id") long id) {
         log.info("Get job: " + id);
         Job job = jobService.getJob(id);
@@ -88,7 +82,6 @@ public class BFFController {
     }
 
     @PostMapping("/job/{id}/apply")
-    @CrossOrigin
     public ResponseEntity<Void> applyForJob(@PathVariable("id") long id, @RequestBody Application application) {
         log.info("Apply for job: " + id);
         Job job = jobService.getJob(id);
@@ -100,7 +93,6 @@ public class BFFController {
     }
 
     @GetMapping("/job")
-    @CrossOrigin
     public ResponseEntity<List<Job>> getAllJobs() {
         log.info("Get all jobs");
         if (jobService.getAllJobs().isEmpty()) {
@@ -110,7 +102,6 @@ public class BFFController {
     }
 
     @PutMapping("company/{id}")
-    @CrossOrigin
     public void updateCompany(@RequestBody Company company, @PathVariable Long id) {
         log.info("Company updated: " + company);
         companyService.update(id, company);
