@@ -106,7 +106,7 @@ public class BFFController {
         String body = new String(decoder.decode(base64EncodedBody));
         String[] split_body = body.split(",");
         String[] split_id = split_body[0].split(":");
-        return split_id[1];
+        return split_id[3];
     }
 
     @GetMapping("/job")
