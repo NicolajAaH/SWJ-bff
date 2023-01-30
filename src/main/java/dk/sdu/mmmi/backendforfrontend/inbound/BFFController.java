@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Base64;
 import java.util.HashSet;
 import java.util.List;
 
@@ -52,9 +53,9 @@ public class BFFController {
     }
 
     @PostMapping("/auth/login")
-    public void login(@RequestBody LoginRequest loginRequest) {
-        log.info("Company logged in: " + loginRequest);
-        authenticationService.login(loginRequest);
+    public TokenResponse login(@RequestBody LoginRequest loginRequest) {
+        log.info("Logged in: " + loginRequest);
+        return authenticationService.login(loginRequest);
     }
 
     @PostMapping("/auth/logout")
@@ -84,12 +85,28 @@ public class BFFController {
     @PostMapping("/job/{id}/apply")
     public ResponseEntity<Void> applyForJob(@PathVariable("id") long id, @RequestBody Application application) {
         log.info("Apply for job: " + id);
+        //UserId is token
+        String userId = getUserIdFromToken(application.getUserId());
+
+        //set new userId
+        application.setUserId(userId);
+
         Job job = jobService.getJob(id);
         if (job == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         jobService.applyForJob(id, application);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    private String getUserIdFromToken(String token) {
+        String[] split_string = token.split("\\.");
+        String base64EncodedBody = split_string[1];
+        Base64.Decoder decoder = Base64.getDecoder();
+        String body = new String(decoder.decode(base64EncodedBody));
+        String[] split_body = body.split(",");
+        String[] split_id = split_body[0].split(":");
+        return split_id[1];
     }
 
     @GetMapping("/job")
