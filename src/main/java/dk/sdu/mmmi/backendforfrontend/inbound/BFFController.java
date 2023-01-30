@@ -17,6 +17,7 @@ import java.util.List;
 @RequestMapping("/api/bff")
 @AllArgsConstructor
 @Slf4j
+@CrossOrigin("*")
 public class BFFController {
     private final CompanyService companyService;
 
