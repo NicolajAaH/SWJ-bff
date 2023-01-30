@@ -1,6 +1,7 @@
 package dk.sdu.mmmi.backendforfrontend.service;
 
 import dk.sdu.mmmi.backendforfrontend.service.interfaces.JobService;
+import dk.sdu.mmmi.backendforfrontend.service.model.Application;
 import dk.sdu.mmmi.backendforfrontend.service.model.Job;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -85,6 +86,15 @@ public class JobServiceImplementation implements JobService {
             return null;
         }
         return List.of(response.getBody());
+    }
+
+    @Override
+    public void applyForJob(long id, Application application) {
+        log.info("--> applyForJob: {}", id);
+        ResponseEntity<Void> response = restTemplate.exchange(JOB_SERVICE_URL + "/" + id + "/apply", HttpMethod.POST, new HttpEntity<>(application), Void.class);
+        if(!response.getStatusCode().is2xxSuccessful()){
+            log.error("Error applying for job: {}", response.getStatusCode());
+        }
     }
 
 }
