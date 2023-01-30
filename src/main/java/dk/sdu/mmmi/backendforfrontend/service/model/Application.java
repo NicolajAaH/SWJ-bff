@@ -12,7 +12,7 @@ import java.util.Date;
 public class Application {
     private Long id;
 
-    private Long userId;
+    private String userId;
 
     private ApplicationStatus status;
 
