@@ -3,6 +3,7 @@ package dk.sdu.mmmi.backendforfrontend.service;
 import dk.sdu.mmmi.backendforfrontend.service.interfaces.AuthenticationService;
 import dk.sdu.mmmi.backendforfrontend.service.model.LoginRequest;
 import dk.sdu.mmmi.backendforfrontend.service.model.LogoutRequest;
+import dk.sdu.mmmi.backendforfrontend.service.model.TokenResponse;
 import dk.sdu.mmmi.backendforfrontend.service.model.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,12 +22,14 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
 
 
     @Override
-    public void login(LoginRequest loginRequest) {
+    public TokenResponse login(LoginRequest loginRequest) {
         log.info("--> login: {}", loginRequest);
-        ResponseEntity<Void> response = restTemplate.postForEntity(JOB_SERVICE_URL + "/login", loginRequest, Void.class);
+        ResponseEntity<TokenResponse> response = restTemplate.postForEntity(JOB_SERVICE_URL + "/login", loginRequest, TokenResponse.class);
         if(!response.getStatusCode().is2xxSuccessful()){
             log.error("Error logging in: {}", response.getStatusCode());
+            return null;
         }
+        return response.getBody();
     }
 
     @Override

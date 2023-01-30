@@ -52,9 +52,9 @@ public class BFFController {
     }
 
     @PostMapping("/auth/login")
-    public void login(@RequestBody LoginRequest loginRequest) {
-        log.info("Company logged in: " + loginRequest);
-        authenticationService.login(loginRequest);
+    public TokenResponse login(@RequestBody LoginRequest loginRequest) {
+        log.info("Logged in: " + loginRequest);
+        return authenticationService.login(loginRequest);
     }
 
     @PostMapping("/auth/logout")

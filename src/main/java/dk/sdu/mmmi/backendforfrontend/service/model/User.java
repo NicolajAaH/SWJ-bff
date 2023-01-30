@@ -10,6 +10,8 @@ import lombok.ToString;
 public class User {
 
     private String email;
+
+    @ToString.Exclude
     private String password;
 
     private String name;
