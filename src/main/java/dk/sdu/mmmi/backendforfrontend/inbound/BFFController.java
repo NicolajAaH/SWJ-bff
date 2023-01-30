@@ -17,7 +17,7 @@ import java.util.List;
 @RequestMapping("/api/bff")
 @AllArgsConstructor
 @Slf4j
-@CrossOrigin(origins = "http://localhost:19006")
+@CrossOrigin(origins = "http://localhost:19006", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
 public class BFFController {
     private final CompanyService companyService;
 
