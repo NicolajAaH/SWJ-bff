@@ -14,10 +14,10 @@ import java.util.HashSet;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("/api/bff")
 @AllArgsConstructor
 @Slf4j
+@CrossOrigin
 public class BFFController {
     private final CompanyService companyService;
 
