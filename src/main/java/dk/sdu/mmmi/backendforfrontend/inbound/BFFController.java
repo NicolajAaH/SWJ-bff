@@ -68,7 +68,7 @@ public class BFFController {
     }
 
     @PostMapping("/job/{email}")
-    public Job postJob(@RequestHeader String email, @RequestBody Job job) {
+    public Job postJob(@PathVariable String email, @RequestBody Job job) {
         log.info("Job posted: " + job);
         if (job.getCompanyId() == null) {
             job.setCompanyId(companyService.getCompanyByEmail(email).getId());
