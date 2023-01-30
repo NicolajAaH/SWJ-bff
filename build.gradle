@@ -4,6 +4,16 @@ plugins {
 	id 'io.spring.dependency-management' version '1.1.0'
 }
 
+apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
+
+
+jar {
+	manifest {
+		attributes 'Main-Class': 'dk.sdu.mmmi.service.application.BackendForFrontendApplication'
+	}
+}
+
 group = 'dk.sdu.mmmi'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'

@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bff-service-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bff-service
+  template:
+    metadata:
+      labels:
+        app: bff-service
+    spec:
+      containers:
+        - name: bff-service
+          image: nicolajh/bff-service
+          ports:
+            - containerPort: 8080
+          env:
+            - name: URL_JOBSERVICE
+              value: http://job-service:8080/api/jobs
+            - name: URL_AUTHENTICATIONSERVICE
+              value: http://authentication-service:3000
+            - name: URL_COMPANYSERVICE
+              value: http://company-service:8080/api/companies
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bff-service
+spec:
+  selector:
+    app: bff-service
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP
