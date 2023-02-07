@@ -105,6 +105,12 @@ public class BFFController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    /**
+     * Extracts the userId from the token
+     *
+     * @param token the token
+     * @return the userId
+     */
     private String getUserIdFromToken(String token) {
         String[] split_string = token.split("\\.");
         String base64EncodedBody = split_string[1];
