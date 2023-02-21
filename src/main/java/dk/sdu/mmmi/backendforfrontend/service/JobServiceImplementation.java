@@ -3,6 +3,7 @@ package dk.sdu.mmmi.backendforfrontend.service;
 import dk.sdu.mmmi.backendforfrontend.service.interfaces.JobService;
 import dk.sdu.mmmi.backendforfrontend.service.model.Application;
 import dk.sdu.mmmi.backendforfrontend.service.model.Job;
+import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -95,6 +96,20 @@ public class JobServiceImplementation implements JobService {
         if(!response.getStatusCode().is2xxSuccessful()){
             log.error("Error applying for job: {}", response.getStatusCode());
         }
+    }
+
+    @Override
+    public List<Application> getApplicationsForJob(long id) {
+        log.info("--> getApplicationsForJob: {}", id);
+        ResponseEntity<Application[]> response = restTemplate.getForEntity(JOB_SERVICE_URL + "/" + id + "/applications", Application[].class);
+        if(!response.getStatusCode().is2xxSuccessful() || response.getBody() == null){
+            log.error("Error getting applications: {}", response.getStatusCode());
+            return Collections.emptyList();
+        }
+        if(response.getBody().length == 0){
+            return Collections.emptyList();
+        }
+        return List.of(response.getBody());
     }
 
 }

@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Base64;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -120,17 +121,29 @@ public class BFFController {
     }
 
     @GetMapping("/job")
-    public ResponseEntity<List<Job>> getAllJobs() {
+    public ResponseEntity<List<Job>> getAllJobs() { //TODO add pagination
         log.info("Get all jobs");
-        if (jobService.getAllJobs().isEmpty()) {
+        List<Job> jobs = jobService.getAllJobs();
+        if (jobs.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(jobService.getAllJobs(), HttpStatus.OK);
+        return new ResponseEntity<>(jobs, HttpStatus.OK);
     }
 
     @PutMapping("company/{id}")
     public void updateCompany(@RequestBody Company company, @PathVariable Long id) {
         log.info("Company updated: " + company);
         companyService.update(id, company);
+    }
+
+    @GetMapping("/job/{id}/applications")
+    public List<Application> getApplicationsForJob(@PathVariable("id") long id) {
+        log.info("Get applications for job: " + id);
+        List<Application> applications = jobService.getApplicationsForJob(id);
+        if(applications == null) {
+            log.error("Received null from jobService.getApplicationsForJob(id)");
+            return Collections.emptyList();
+        }
+        return applications;
     }
 }

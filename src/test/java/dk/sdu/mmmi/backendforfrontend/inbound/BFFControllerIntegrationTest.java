@@ -20,6 +20,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
@@ -174,6 +177,26 @@ class BFFControllerIntegrationTest {
     void updateCompanyNoBody() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.put("/api/bff/company/1"))
                 .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void getApplicationsForJob() throws Exception {
+        when(jobService.getApplicationsForJob(anyLong())).thenReturn(new ArrayList<>(){{
+            TestObjects.createMockApplication();
+        }});
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/bff/job/1/applications")).andExpect(status().isOk());
+    }
+
+    @Test
+    void getApplicationsForJobNoApplications() throws Exception {
+        when(jobService.getApplicationsForJob(anyLong())).thenReturn(Collections.emptyList());
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/bff/job/1/applications")).andExpect(status().isOk());
+    }
+
+    @Test
+    void getApplicationsForJobNull() throws Exception {
+        when(jobService.getApplicationsForJob(anyLong())).thenReturn(null);
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/bff/job/1/applications")).andExpect(status().isOk());
     }
 
 }

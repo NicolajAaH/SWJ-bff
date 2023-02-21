@@ -19,4 +19,6 @@ public interface JobService {
     List<Job> getAllJobs();
 
     void applyForJob(long id, Application application);
+
+    List<Application> getApplicationsForJob(long id);
 }
