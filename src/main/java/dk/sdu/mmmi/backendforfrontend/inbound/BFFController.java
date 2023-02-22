@@ -151,4 +151,10 @@ public class BFFController {
         }
         return applicationDTOS;
     }
+
+    @PutMapping("/application/{id}")
+    public void updateApplication(@RequestBody ApplicationDTO application, @PathVariable Long id) {
+        log.info("Application updated: " + application);
+        jobService.updateApplication(id, application);
+    }
 }

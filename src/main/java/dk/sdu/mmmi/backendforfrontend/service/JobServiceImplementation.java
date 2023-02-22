@@ -2,6 +2,7 @@ package dk.sdu.mmmi.backendforfrontend.service;
 
 import dk.sdu.mmmi.backendforfrontend.service.interfaces.JobService;
 import dk.sdu.mmmi.backendforfrontend.service.model.Application;
+import dk.sdu.mmmi.backendforfrontend.service.model.ApplicationDTO;
 import dk.sdu.mmmi.backendforfrontend.service.model.Job;
 import java.util.Collections;
 import lombok.RequiredArgsConstructor;
@@ -110,6 +111,15 @@ public class JobServiceImplementation implements JobService {
             return Collections.emptyList();
         }
         return List.of(response.getBody());
+    }
+
+    @Override
+    public void updateApplication(Long id, ApplicationDTO application) {
+        log.info("--> updateApplication: {}", id);
+        ResponseEntity<Void> response = restTemplate.exchange(JOB_SERVICE_URL + "/application/" + id, HttpMethod.PUT, new HttpEntity<>(application), Void.class);
+        if(!response.getStatusCode().is2xxSuccessful()){
+            log.error("Error updating application: {}", response.getStatusCode());
+        }
     }
 
 }
