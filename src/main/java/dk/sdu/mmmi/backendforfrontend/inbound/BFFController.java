@@ -32,15 +32,14 @@ public class BFFController {
 
     private Gson gson = new Gson();
 
-    @GetMapping("/company/{id}")
-    public ResponseEntity<Company> getCompany(@PathVariable("id") long id) {
-        log.info("Get company: " + id);
-        Company company = companyService.findById(id);
+    @GetMapping("/company/{email}")
+    public ResponseEntity<Company> getCompany(@PathVariable("email") long email) {
+        log.info("Get company: " + email);
+        Company company = companyService.findByEmail(email);
 
         if (company == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        company.setJobs(new HashSet<>(jobService.getJobsByCompanyId(id)));
         return new ResponseEntity<>(company, HttpStatus.OK);
     }
 

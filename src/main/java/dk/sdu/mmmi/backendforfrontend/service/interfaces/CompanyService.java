@@ -1,6 +1,5 @@
 package dk.sdu.mmmi.backendforfrontend.service.interfaces;
 
-import dk.sdu.mmmi.backendforfrontend.service.model.Application;
 import dk.sdu.mmmi.backendforfrontend.service.model.Company;
 
 import java.util.List;
@@ -17,4 +16,6 @@ public interface CompanyService {
     void delete(Long id);
 
     Company getCompanyByEmail(String email);
+
+    Company findByEmail(long email);
 }
