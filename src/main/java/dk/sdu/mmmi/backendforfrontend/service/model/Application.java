@@ -21,4 +21,6 @@ public class Application {
     private Date updatedAt;
 
     private Long jobId;
+
+    private String application;
 }
