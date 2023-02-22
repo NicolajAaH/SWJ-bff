@@ -146,7 +146,8 @@ public class BFFController {
         }
         List<ApplicationDTO> applicationDTOS = applications.stream().map(dtoMapper::toApplicationDTO).toList();
         for (ApplicationDTO applicationDTO : applicationDTOS){
-            applicationDTO.setUser(authenticationService.getUser(applicationDTO.getUserId()));
+            User user = authenticationService.getUser(applicationDTO.getUserId());
+            applicationDTO.setUser(dtoMapper.toUserDTO(user));
         }
         return applications;
     }

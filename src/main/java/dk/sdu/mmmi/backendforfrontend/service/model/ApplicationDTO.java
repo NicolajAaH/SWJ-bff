@@ -14,7 +14,7 @@ public class ApplicationDTO {
 
     private String userId;
 
-    private User user;
+    private UserDTO user;
 
     private ApplicationStatus status;
 
