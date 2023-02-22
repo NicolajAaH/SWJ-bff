@@ -23,4 +23,6 @@ public class ApplicationDTO {
     private Date updatedAt;
 
     private Long jobId;
+
+    private String application;
 }
