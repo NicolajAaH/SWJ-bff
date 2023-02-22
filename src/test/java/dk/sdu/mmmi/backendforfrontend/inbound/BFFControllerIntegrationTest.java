@@ -23,8 +23,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -53,9 +52,9 @@ class BFFControllerIntegrationTest {
 
     @Test
     void getCompany() throws Exception {
-        long id = 1;
-        when(companyService.findById(anyLong())).thenReturn(TestObjects.createMockCompany());
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/bff/company/" + id)).andExpect(status().is2xxSuccessful());
+        String email = "test@test.dk";
+        when(companyService.findByEmail(anyString())).thenReturn(TestObjects.createMockCompany());
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/bff/company/" + email)).andExpect(status().is2xxSuccessful());
     }
 
     @Test

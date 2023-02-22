@@ -17,5 +17,5 @@ public interface CompanyService {
 
     Company getCompanyByEmail(String email);
 
-    Company findByEmail(long email);
+    Company findByEmail(String email);
 }

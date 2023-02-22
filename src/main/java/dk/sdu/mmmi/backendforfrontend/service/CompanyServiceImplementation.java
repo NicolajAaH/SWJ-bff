@@ -89,7 +89,7 @@ public class CompanyServiceImplementation implements CompanyService {
     }
 
     @Override
-    public Company findByEmail(long email) {
+    public Company findByEmail(String email) {
         log.info("--> findByEmail: {}", email);
         ResponseEntity<Company> response = restTemplate.getForEntity(COMPANY_SERVICE_URL + "/byEmail/" + email, Company.class);
         if(!response.getStatusCode().is2xxSuccessful()){

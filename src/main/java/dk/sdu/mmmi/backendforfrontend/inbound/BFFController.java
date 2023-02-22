@@ -33,7 +33,7 @@ public class BFFController {
     private Gson gson = new Gson();
 
     @GetMapping("/company/{email}")
-    public ResponseEntity<Company> getCompany(@PathVariable("email") long email) {
+    public ResponseEntity<Company> getCompany(@PathVariable("email") String email) {
         log.info("Get company: " + email);
         Company company = companyService.findByEmail(email);
 
