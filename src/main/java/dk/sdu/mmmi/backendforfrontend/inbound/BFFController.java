@@ -137,7 +137,7 @@ public class BFFController {
     }
 
     @GetMapping("/job/{id}/applications")
-    public List<Application> getApplicationsForJob(@PathVariable("id") long id) {
+    public List<ApplicationDTO> getApplicationsForJob(@PathVariable("id") long id) {
         log.info("Get applications for job: " + id);
         List<Application> applications = jobService.getApplicationsForJob(id);
         if(applications == null) {
