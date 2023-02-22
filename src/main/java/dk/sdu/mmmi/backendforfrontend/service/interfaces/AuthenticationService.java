@@ -11,4 +11,6 @@ public interface AuthenticationService {
     void logout(LogoutRequest logoutRequest);
 
     void register(User user);
+
+    User getUser(String userId);
 }

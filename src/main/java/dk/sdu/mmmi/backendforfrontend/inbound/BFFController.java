@@ -15,6 +15,7 @@ import java.util.Base64;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/bff")
@@ -142,6 +143,10 @@ public class BFFController {
         if(applications == null) {
             log.error("Received null from jobService.getApplicationsForJob(id)");
             return Collections.emptyList();
+        }
+        List<ApplicationDTO> applicationDTOS = applications.stream().map(dtoMapper::toApplicationDTO).toList();
+        for (ApplicationDTO applicationDTO : applicationDTOS){
+            applicationDTO.setUser(authenticationService.getUser(applicationDTO.getUserId()));
         }
         return applications;
     }

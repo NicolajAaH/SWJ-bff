@@ -49,4 +49,15 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
             log.error("Error registering: {}", response.getStatusCode());
         }
     }
+
+    @Override
+    public User getUser(String userId) {
+        log.info("--> getUser: {}", userId);
+        ResponseEntity<User> response = restTemplate.getForEntity(JOB_SERVICE_URL + "/user/" + userId, User.class);
+        if(!response.getStatusCode().is2xxSuccessful()){
+            log.error("Error getting user: {}", response.getStatusCode());
+            return null;
+        }
+        return response.getBody();
+    }
 }

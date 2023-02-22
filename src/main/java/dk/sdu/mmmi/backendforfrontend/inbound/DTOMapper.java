@@ -1,5 +1,7 @@
 package dk.sdu.mmmi.backendforfrontend.inbound;
 
+import dk.sdu.mmmi.backendforfrontend.service.model.Application;
+import dk.sdu.mmmi.backendforfrontend.service.model.ApplicationDTO;
 import dk.sdu.mmmi.backendforfrontend.service.model.Job;
 import dk.sdu.mmmi.backendforfrontend.service.model.JobDTO;
 import org.mapstruct.Mapper;
@@ -13,4 +15,6 @@ public interface DTOMapper{
 
     @Mapping(target = "company", ignore = true)
     JobDTO toJobDTO(Job job);
+
+    ApplicationDTO toApplicationDTO(Application application);
 }
