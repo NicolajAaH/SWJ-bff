@@ -149,6 +149,6 @@ public class BFFController {
             User user = authenticationService.getUser(applicationDTO.getUserId());
             applicationDTO.setUser(dtoMapper.toUserDTO(user));
         }
-        return applications;
+        return applicationDTOS;
     }
 }
