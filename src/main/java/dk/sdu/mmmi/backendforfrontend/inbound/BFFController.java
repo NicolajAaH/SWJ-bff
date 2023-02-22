@@ -32,7 +32,7 @@ public class BFFController {
 
     private Gson gson = new Gson();
 
-    @GetMapping("company/{id}")
+    @GetMapping("/company/{id}")
     public ResponseEntity<Company> getCompany(@PathVariable("id") long id) {
         log.info("Get company: " + id);
         Company company = companyService.findById(id);
