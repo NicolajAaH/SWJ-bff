@@ -157,4 +157,10 @@ public class BFFController {
         log.info("Application updated: " + application);
         jobService.updateApplication(id, application);
     }
+
+    @GetMapping("/applications/{userId}")
+    public void getApplicationsForUser(@PathVariable("userId") String userId) {
+        log.info("Get applications for user: " + userId);
+        jobService.getApplicationsForUser(userId);
+    }
 }

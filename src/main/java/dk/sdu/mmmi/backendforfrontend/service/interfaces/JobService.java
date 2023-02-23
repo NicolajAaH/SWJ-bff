@@ -24,4 +24,6 @@ public interface JobService {
     List<Application> getApplicationsForJob(long id);
 
     void updateApplication(Long id, ApplicationDTO application);
+
+    void getApplicationsForUser(String userId);
 }
