@@ -195,7 +195,7 @@ class BFFControllerIntegrationTest {
     @Test
     void getApplicationsForJobNull() throws Exception {
         when(jobService.getApplicationsForJob(anyLong())).thenReturn(null);
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/bff/job/1/applications")).andExpect(status().isOk());
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/bff/job/1/applications")).andExpect(status().is4xxClientError());
     }
 
 }
