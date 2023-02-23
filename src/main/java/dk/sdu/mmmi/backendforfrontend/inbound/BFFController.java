@@ -144,11 +144,7 @@ public class BFFController {
             log.error("Received null from jobService.getApplicationsForJob(id)");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        List<ApplicationDTO> applicationDTOS = applications.stream().map(dtoMapper::toApplicationDTO).toList();
-        for (ApplicationDTO applicationDTO : applicationDTOS){
-            User user = authenticationService.getUser(applicationDTO.getUserId());
-            applicationDTO.setUser(dtoMapper.toUserDTO(user));
-        }
+        List<ApplicationDTO> applicationDTOS = mapApplicationToApplicationDTOsWithUsers(applications);
         return new ResponseEntity<>(applicationDTOS, HttpStatus.OK);
     }
 
@@ -159,13 +155,23 @@ public class BFFController {
     }
 
     @GetMapping("/applications/{userId}")
-    public ResponseEntity<List<Application>> getApplicationsForUser(@PathVariable("userId") String userId) {
+    public ResponseEntity<List<ApplicationDTO>> getApplicationsForUser(@PathVariable("userId") String userId) {
         log.info("Get applications for user: " + userId);
         List<Application> applications = jobService.getApplicationsForUser(userId);
         if(applications == null) {
             log.error("Received null from jobService.getApplicationsForUser(userId)");
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(applications, HttpStatus.OK);
+        List<ApplicationDTO> applicationDTOS = mapApplicationToApplicationDTOsWithUsers(applications);
+        return new ResponseEntity<>(applicationDTOS, HttpStatus.OK);
+    }
+
+    private List<ApplicationDTO> mapApplicationToApplicationDTOsWithUsers(List<Application> applications) {
+        List<ApplicationDTO> applicationDTOS = applications.stream().map(dtoMapper::toApplicationDTO).toList();
+        for (ApplicationDTO applicationDTO : applicationDTOS) {
+            User user = authenticationService.getUser(applicationDTO.getUserId());
+            applicationDTO.setUser(dtoMapper.toUserDTO(user));
+        }
+        return applicationDTOS;
     }
 }
