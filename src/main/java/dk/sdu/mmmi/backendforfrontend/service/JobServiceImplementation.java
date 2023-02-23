@@ -123,12 +123,16 @@ public class JobServiceImplementation implements JobService {
     }
 
     @Override
-    public void getApplicationsForUser(String userId) {
+    public List<Application> getApplicationsForUser(String userId) {
         log.info("--> getApplicationsForUser: {}", userId);
         ResponseEntity<Application[]> response = restTemplate.getForEntity(JOB_SERVICE_URL + "/applications/" + userId, Application[].class);
         if(!response.getStatusCode().is2xxSuccessful() || response.getBody() == null){
             log.error("Error getting applications: {}", response.getStatusCode());
         }
+        if(response.getBody().length == 0){
+            return Collections.emptyList();
+        }
+        return List.of(response.getBody());
     }
 
 }

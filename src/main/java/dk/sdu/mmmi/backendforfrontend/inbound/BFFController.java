@@ -137,19 +137,19 @@ public class BFFController {
     }
 
     @GetMapping("/job/{id}/applications")
-    public List<ApplicationDTO> getApplicationsForJob(@PathVariable("id") long id) {
+    public ResponseEntity<List<ApplicationDTO>> getApplicationsForJob(@PathVariable("id") long id) {
         log.info("Get applications for job: " + id);
         List<Application> applications = jobService.getApplicationsForJob(id);
         if(applications == null) {
             log.error("Received null from jobService.getApplicationsForJob(id)");
-            return Collections.emptyList();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         List<ApplicationDTO> applicationDTOS = applications.stream().map(dtoMapper::toApplicationDTO).toList();
         for (ApplicationDTO applicationDTO : applicationDTOS){
             User user = authenticationService.getUser(applicationDTO.getUserId());
             applicationDTO.setUser(dtoMapper.toUserDTO(user));
         }
-        return applicationDTOS;
+        return new ResponseEntity<>(applicationDTOS, HttpStatus.OK);
     }
 
     @PutMapping("/application/{id}")
@@ -159,8 +159,13 @@ public class BFFController {
     }
 
     @GetMapping("/applications/{userId}")
-    public void getApplicationsForUser(@PathVariable("userId") String userId) {
+    public ResponseEntity<List<Application>> getApplicationsForUser(@PathVariable("userId") String userId) {
         log.info("Get applications for user: " + userId);
-        jobService.getApplicationsForUser(userId);
+        List<Application> applications = jobService.getApplicationsForUser(userId);
+        if(applications == null) {
+            log.error("Received null from jobService.getApplicationsForUser(userId)");
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(applications, HttpStatus.OK);
     }
 }
