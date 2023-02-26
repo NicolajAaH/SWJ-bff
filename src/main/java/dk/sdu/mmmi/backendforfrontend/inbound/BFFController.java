@@ -166,6 +166,16 @@ public class BFFController {
         return new ResponseEntity<>(applicationDTOS, HttpStatus.OK);
     }
 
+    @GetMapping("/job/search/{searchTerm}")
+    public ResponseEntity<List<Job>> searchJobs(@PathVariable("searchTerm") String searchTerm) {
+        log.info("Search jobs: " + searchTerm);
+        List<Job> jobs = jobService.searchJobs(searchTerm);
+        if (jobs.isEmpty()) {
+            return new ResponseEntity<>(Collections.emptyList(), HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(jobs, HttpStatus.OK);
+    }
+
     private List<ApplicationDTO> mapApplicationToApplicationDTOsWithUsers(List<Application> applications) {
         List<ApplicationDTO> applicationDTOS = applications.stream().map(dtoMapper::toApplicationDTO).toList();
         for (ApplicationDTO applicationDTO : applicationDTOS) {

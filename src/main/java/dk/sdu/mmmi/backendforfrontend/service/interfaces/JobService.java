@@ -26,4 +26,6 @@ public interface JobService {
     void updateApplication(Long id, ApplicationDTO application);
 
     List<Application> getApplicationsForUser(String userId);
+
+    List<Job> searchJobs(String searchTerm);
 }

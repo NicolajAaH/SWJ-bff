@@ -135,4 +135,18 @@ public class JobServiceImplementation implements JobService {
         return List.of(response.getBody());
     }
 
+    @Override
+    public List<Job> searchJobs(String searchTerm) {
+        log.info("--> searchJobs: {}", searchTerm);
+        ResponseEntity<Job[]> response = restTemplate.getForEntity(JOB_SERVICE_URL + "/search/" + searchTerm, Job[].class);
+        if(!response.getStatusCode().is2xxSuccessful() || response.getBody() == null){
+            log.error("Error getting jobs: {}", response.getStatusCode());
+            return null;
+        }
+        if(response.getBody().length == 0){
+            return Collections.emptyList();
+        }
+        return List.of(response.getBody());
+    }
+
 }
