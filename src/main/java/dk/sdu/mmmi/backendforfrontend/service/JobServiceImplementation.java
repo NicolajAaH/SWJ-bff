@@ -13,8 +13,10 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -141,7 +143,23 @@ public class JobServiceImplementation implements JobService {
         ResponseEntity<Job[]> response = restTemplate.getForEntity(JOB_SERVICE_URL + "/search/" + searchTerm, Job[].class);
         if(!response.getStatusCode().is2xxSuccessful() || response.getBody() == null){
             log.error("Error getting jobs: {}", response.getStatusCode());
-            return null;
+            return Collections.emptyList();
+        }
+        if(response.getBody().length == 0){
+            return Collections.emptyList();
+        }
+        return List.of(response.getBody());
+    }
+
+    @Override
+    public List<Job> filterJobs(Map<String, String> allRequestParams) {
+        log.info("--> filterJobs: {}", allRequestParams);
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(JOB_SERVICE_URL + "/filter");
+        allRequestParams.forEach(builder::queryParam);
+        ResponseEntity<Job[]> response = restTemplate.getForEntity(builder.toUriString(), Job[].class);
+        if(!response.getStatusCode().is2xxSuccessful() || response.getBody() == null){
+            log.error("Error getting jobs: {}", response.getStatusCode());
+            return Collections.emptyList();
         }
         if(response.getBody().length == 0){
             return Collections.emptyList();

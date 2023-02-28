@@ -5,6 +5,7 @@ import dk.sdu.mmmi.backendforfrontend.service.model.ApplicationDTO;
 import dk.sdu.mmmi.backendforfrontend.service.model.Job;
 
 import java.util.List;
+import java.util.Map;
 
 public interface JobService {
     Job createJob(Job job);
@@ -28,4 +29,6 @@ public interface JobService {
     List<Application> getApplicationsForUser(String userId);
 
     List<Job> searchJobs(String searchTerm);
+
+    List<Job> filterJobs(Map<String, String> allRequestParams);
 }
