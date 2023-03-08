@@ -31,4 +31,6 @@ public interface JobService {
     List<Job> searchJobs(String searchTerm);
 
     List<Job> filterJobs(Map<String, String> allRequestParams);
+
+    void update(Long id, Job job);
 }

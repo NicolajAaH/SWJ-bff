@@ -183,6 +183,12 @@ public class BFFController {
         return new ResponseEntity<>(jobs, HttpStatus.OK);
     }
 
+    @PutMapping("/job/{id}")
+    public void updateJob(@RequestBody Job job, @PathVariable Long id) {
+        log.info("Job updated: " + job);
+        jobService.update(id, job);
+    }
+
 
     //Helper methods
     private List<ApplicationDTO> mapApplicationToApplicationDTOsWithUsers(List<Application> applications) {
