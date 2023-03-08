@@ -9,10 +9,12 @@ import java.util.Date;
 @Getter
 @Setter
 @ToString
-public class Application {
+public class ApplicationDTO {
     private Long id;
 
     private String userId;
+
+    private UserDTO user;
 
     private ApplicationStatus status;
 

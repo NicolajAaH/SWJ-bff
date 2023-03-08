@@ -11,9 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Base64;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/bff")
@@ -31,15 +30,14 @@ public class BFFController {
 
     private Gson gson = new Gson();
 
-    @GetMapping("company/{id}")
-    public ResponseEntity<Company> getCompany(@PathVariable("id") long id) {
-        log.info("Get company: " + id);
-        Company company = companyService.findById(id);
+    @GetMapping("/company/{email}")
+    public ResponseEntity<Company> getCompany(@PathVariable("email") String email) {
+        log.info("Get company: " + email);
+        Company company = companyService.findByEmail(email);
 
         if (company == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        company.setJobs(new HashSet<>(jobService.getJobsByCompanyId(id)));
         return new ResponseEntity<>(company, HttpStatus.OK);
     }
 
@@ -120,17 +118,85 @@ public class BFFController {
     }
 
     @GetMapping("/job")
-    public ResponseEntity<List<Job>> getAllJobs() {
+    public ResponseEntity<List<Job>> getAllJobs() { //TODO add pagination
         log.info("Get all jobs");
-        if (jobService.getAllJobs().isEmpty()) {
+        List<Job> jobs = jobService.getAllJobs();
+        if (jobs.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(jobService.getAllJobs(), HttpStatus.OK);
+        return new ResponseEntity<>(jobs, HttpStatus.OK);
     }
 
     @PutMapping("company/{id}")
     public void updateCompany(@RequestBody Company company, @PathVariable Long id) {
         log.info("Company updated: " + company);
         companyService.update(id, company);
+    }
+
+    @GetMapping("/job/{id}/applications")
+    public ResponseEntity<List<ApplicationDTO>> getApplicationsForJob(@PathVariable("id") long id) {
+        log.info("Get applications for job: " + id);
+        List<Application> applications = jobService.getApplicationsForJob(id);
+        if(applications == null) {
+            log.error("Received null from jobService.getApplicationsForJob(id)");
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        List<ApplicationDTO> applicationDTOS = mapApplicationToApplicationDTOsWithUsers(applications);
+        return new ResponseEntity<>(applicationDTOS, HttpStatus.OK);
+    }
+
+    @PutMapping("/application/{id}")
+    public void updateApplication(@RequestBody ApplicationDTO application, @PathVariable Long id) {
+        log.info("Application updated: " + application);
+        jobService.updateApplication(id, application);
+    }
+
+    @GetMapping("/applications/{userId}")
+    public ResponseEntity<List<ApplicationDTO>> getApplicationsForUser(@PathVariable("userId") String userId) {
+        log.info("Get applications for user: " + userId);
+        List<Application> applications = jobService.getApplicationsForUser(userId);
+        if(applications == null) {
+            log.error("Received null from jobService.getApplicationsForUser(userId)");
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        List<ApplicationDTO> applicationDTOS = mapApplicationToApplicationDTOsWithUsers(applications);
+        return new ResponseEntity<>(applicationDTOS, HttpStatus.OK);
+    }
+
+    @GetMapping("/job/search/{searchTerm}")
+    public ResponseEntity<List<Job>> searchJobs(@PathVariable("searchTerm") String searchTerm) {
+        log.info("Search jobs: " + searchTerm);
+        List<Job> jobs = jobService.searchJobs(searchTerm);
+        if (jobs.isEmpty()) {
+            return new ResponseEntity<>(Collections.emptyList(), HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(jobs, HttpStatus.OK);
+    }
+
+    @GetMapping("/job/filter")
+    public ResponseEntity<List<Job>> filterJobs(@RequestParam Map<String, String> allRequestParams) {
+        log.info("Filter jobs: " + allRequestParams);
+        List<Job> jobs = jobService.filterJobs(allRequestParams);
+        if (jobs.isEmpty()) {
+            return new ResponseEntity<>(Collections.emptyList(), HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(jobs, HttpStatus.OK);
+    }
+
+    @PutMapping("/job/{id}")
+    public void updateJob(@RequestBody Job job, @PathVariable Long id) {
+        log.info("Job updated: " + job);
+        jobService.update(id, job);
+    }
+
+
+    //Helper methods
+    private List<ApplicationDTO> mapApplicationToApplicationDTOsWithUsers(List<Application> applications) {
+        List<ApplicationDTO> applicationDTOS = applications.stream().map(dtoMapper::toApplicationDTO).toList();
+        for (ApplicationDTO applicationDTO : applicationDTOS) {
+            User user = authenticationService.getUser(applicationDTO.getUserId());
+            applicationDTO.setUser(dtoMapper.toUserDTO(user));
+        }
+        return applicationDTOS;
     }
 }

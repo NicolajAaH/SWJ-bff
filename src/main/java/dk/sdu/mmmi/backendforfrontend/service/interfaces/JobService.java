@@ -1,9 +1,11 @@
 package dk.sdu.mmmi.backendforfrontend.service.interfaces;
 
 import dk.sdu.mmmi.backendforfrontend.service.model.Application;
+import dk.sdu.mmmi.backendforfrontend.service.model.ApplicationDTO;
 import dk.sdu.mmmi.backendforfrontend.service.model.Job;
 
 import java.util.List;
+import java.util.Map;
 
 public interface JobService {
     Job createJob(Job job);
@@ -19,4 +21,16 @@ public interface JobService {
     List<Job> getAllJobs();
 
     void applyForJob(long id, Application application);
+
+    List<Application> getApplicationsForJob(long id);
+
+    void updateApplication(Long id, ApplicationDTO application);
+
+    List<Application> getApplicationsForUser(String userId);
+
+    List<Job> searchJobs(String searchTerm);
+
+    List<Job> filterJobs(Map<String, String> allRequestParams);
+
+    void update(Long id, Job job);
 }
