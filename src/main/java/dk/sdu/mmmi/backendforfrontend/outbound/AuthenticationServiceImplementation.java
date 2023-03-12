@@ -1,4 +1,4 @@
-package dk.sdu.mmmi.backendforfrontend.service;
+package dk.sdu.mmmi.backendforfrontend.outbound;
 
 import dk.sdu.mmmi.backendforfrontend.service.interfaces.AuthenticationService;
 import dk.sdu.mmmi.backendforfrontend.service.model.LoginRequest;

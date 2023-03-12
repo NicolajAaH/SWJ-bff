@@ -1,4 +1,4 @@
-package dk.sdu.mmmi.backendforfrontend.service;
+package dk.sdu.mmmi.backendforfrontend.outbound;
 
 import dk.sdu.mmmi.backendforfrontend.service.interfaces.JobService;
 import dk.sdu.mmmi.backendforfrontend.service.model.Application;

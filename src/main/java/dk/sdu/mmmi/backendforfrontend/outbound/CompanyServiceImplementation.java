@@ -1,4 +1,4 @@
-package dk.sdu.mmmi.backendforfrontend.service;
+package dk.sdu.mmmi.backendforfrontend.outbound;
 
 import dk.sdu.mmmi.backendforfrontend.service.interfaces.CompanyService;
 import dk.sdu.mmmi.backendforfrontend.service.model.Company;

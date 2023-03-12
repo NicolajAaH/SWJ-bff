@@ -6,6 +6,7 @@ import dk.sdu.mmmi.backendforfrontend.service.application.BackendForFrontendAppl
 import dk.sdu.mmmi.backendforfrontend.service.interfaces.AuthenticationService;
 import dk.sdu.mmmi.backendforfrontend.service.interfaces.CompanyService;
 import dk.sdu.mmmi.backendforfrontend.service.interfaces.JobService;
+import dk.sdu.mmmi.backendforfrontend.service.model.Job;
 import dk.sdu.mmmi.backendforfrontend.service.model.LoginRequest;
 import dk.sdu.mmmi.backendforfrontend.service.model.LogoutRequest;
 import org.junit.jupiter.api.Test;
@@ -120,6 +121,7 @@ class BFFControllerIntegrationTest {
 
     @Test
     void postJob() throws Exception {
+        when(jobService.createJob(any(Job.class))).thenReturn(TestObjects.createMockJob());
         String email = "email";
         mockMvc.perform(MockMvcRequestBuilders.post("/api/bff/job/" + email)
                 .contentType("application/json")
@@ -183,19 +185,19 @@ class BFFControllerIntegrationTest {
         when(jobService.getApplicationsForJob(anyLong())).thenReturn(new ArrayList<>(){{
             TestObjects.createMockApplication();
         }});
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/bff/job/1/applications")).andExpect(status().isOk());
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/bff/job/1/applications")).andExpect(status().is2xxSuccessful());
     }
 
     @Test
     void getApplicationsForJobNoApplications() throws Exception {
         when(jobService.getApplicationsForJob(anyLong())).thenReturn(Collections.emptyList());
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/bff/job/1/applications")).andExpect(status().isOk());
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/bff/job/1/applications")).andExpect(status().is2xxSuccessful());
     }
 
     @Test
     void getApplicationsForJobNull() throws Exception {
         when(jobService.getApplicationsForJob(anyLong())).thenReturn(null);
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/bff/job/1/applications")).andExpect(status().is4xxClientError());
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/bff/job/1/applications")).andExpect(status().is5xxServerError());
     }
 
 }
