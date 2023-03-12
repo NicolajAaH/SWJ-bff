@@ -1,4 +1,4 @@
-package dk.sdu.mmmi.backendforfrontend.inbound;
+package dk.sdu.mmmi.backendforfrontend.service.mapper;
 
 import dk.sdu.mmmi.backendforfrontend.service.model.*;
 import org.mapstruct.Mapper;
