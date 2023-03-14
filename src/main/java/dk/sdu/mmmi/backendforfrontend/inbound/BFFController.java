@@ -20,6 +20,7 @@ import java.util.Map;
 public class BFFController {
     private final BFFService bffService;
 
+    // ----- COMPANY -----
     @GetMapping("/company/{email}")
     public ResponseEntity<Company> getCompany(@PathVariable("email") String email) {
         log.info("Get company: " + email);
@@ -31,11 +32,19 @@ public class BFFController {
         return new ResponseEntity<>(company, HttpStatus.OK);
     }
 
+    @PutMapping("company/{id}")
+    public void updateCompany(@RequestBody Company company, @PathVariable Long id) {
+        log.info("Company updated: " + company);
+        bffService.updateCompany(company, id);
+    }
+
     @PostMapping("/companies/register")
     public void registerCompany(@RequestBody Company company) {
         log.info("Company registered: " + company);
         bffService.registerCompany(company);
     }
+
+    // ----- AUTHENTICATION -----
 
     @PostMapping("/auth/register")
     public void registerUser(@RequestBody User user) {
@@ -54,6 +63,8 @@ public class BFFController {
         log.info("Company logged out: " + logoutRequest);
         bffService.logout(logoutRequest);
     }
+
+    // ----- JOB -----
 
     @PostMapping("/job/{email}")
     public ResponseEntity<Job> postJob(@PathVariable String email, @RequestBody Job job) {
@@ -96,38 +107,6 @@ public class BFFController {
         return new ResponseEntity<>(jobs, HttpStatus.OK);
     }
 
-    @PutMapping("company/{id}")
-    public void updateCompany(@RequestBody Company company, @PathVariable Long id) {
-        log.info("Company updated: " + company);
-        bffService.updateCompany(company, id);
-    }
-
-    @GetMapping("/job/{id}/applications")
-    public ResponseEntity<List<ApplicationDTO>> getApplicationsForJob(@PathVariable("id") long id) {
-        log.info("Get applications for job: " + id);
-        List<ApplicationDTO> applications = bffService.getApplicationsForJob(id);
-        if (applications == null) {
-            return new ResponseEntity<>(Collections.emptyList(), HttpStatus.INTERNAL_SERVER_ERROR); //Something went wrong in the API call
-        }
-        if (applications.isEmpty()) {
-            return new ResponseEntity<>(Collections.emptyList(), HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(applications, HttpStatus.OK);
-    }
-
-    @PutMapping("/application/{id}")
-    public void updateApplication(@RequestBody ApplicationDTO application, @PathVariable Long id) {
-        log.info("Application updated: " + application);
-        bffService.updateApplication(application, id);
-    }
-
-    @GetMapping("/applications/{userId}")
-    public ResponseEntity<List<ApplicationDTO>> getApplicationsForUser(@PathVariable("userId") String userId) {
-        log.info("Get applications for user: " + userId);
-        List<ApplicationDTO> applications = bffService.getApplicationsForUser(userId);
-        return new ResponseEntity<>(applications, HttpStatus.OK);
-    }
-
     @GetMapping("/job/search/{searchTerm}")
     public ResponseEntity<List<Job>> searchJobs(@PathVariable("searchTerm") String searchTerm) {
         log.info("Search jobs: " + searchTerm);
@@ -152,5 +131,32 @@ public class BFFController {
     public void updateJob(@RequestBody Job job, @PathVariable Long id) {
         log.info("Job updated: " + job);
         bffService.updateJob(job, id);
+    }
+
+    // ----- APPLICATION -----
+    @GetMapping("/job/{id}/applications")
+    public ResponseEntity<List<ApplicationDTO>> getApplicationsForJob(@PathVariable("id") long id) {
+        log.info("Get applications for job: " + id);
+        List<ApplicationDTO> applications = bffService.getApplicationsForJob(id);
+        if (applications == null) {
+            return new ResponseEntity<>(Collections.emptyList(), HttpStatus.INTERNAL_SERVER_ERROR); //Something went wrong in the API call
+        }
+        if (applications.isEmpty()) {
+            return new ResponseEntity<>(Collections.emptyList(), HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(applications, HttpStatus.OK);
+    }
+
+    @PutMapping("/application/{id}")
+    public void updateApplication(@RequestBody ApplicationDTO application, @PathVariable Long id) {
+        log.info("Application updated: " + application);
+        bffService.updateApplication(application, id);
+    }
+
+    @GetMapping("/applications/{userId}")
+    public ResponseEntity<List<ApplicationDTO>> getApplicationsForUser(@PathVariable("userId") String userId) {
+        log.info("Get applications for user: " + userId);
+        List<ApplicationDTO> applications = bffService.getApplicationsForUser(userId);
+        return new ResponseEntity<>(applications, HttpStatus.OK);
     }
 }
