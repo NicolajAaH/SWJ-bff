@@ -23,6 +23,8 @@ public class Company {
 
     private Date updatedAt;
 
+    private Integer phone;
+
     @ToString.Exclude
     private Set<Job> jobs;
 }
