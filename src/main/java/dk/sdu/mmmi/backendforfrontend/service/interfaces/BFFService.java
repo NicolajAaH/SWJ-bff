@@ -40,4 +40,6 @@ public interface BFFService {
     void updateJob(Job job, Long id);
 
     void updateUser(String id, User user);
+
+    User getUser(String id);
 }

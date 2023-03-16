@@ -172,6 +172,12 @@ public class BFFServiceImplementation implements BFFService {
         authenticationService.updateUser(id, user);
     }
 
+    @Override
+    public User getUser(String id) {
+        log.info("getUser({})", id);
+        return authenticationService.getUser(id);
+    }
+
 
     //Helper methods
     private List<ApplicationDTO> mapApplicationToApplicationDTOsWithUsers(List<Application> applications) {

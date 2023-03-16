@@ -70,6 +70,12 @@ public class BFFController {
         bffService.updateUser(id, user);
     }
 
+    @GetMapping("/auth/user/{id}")
+    public User getUser(@PathVariable String id){
+        log.info("Get user: " + id);
+        return bffService.getUser(id);
+    }
+
     // ----- JOB -----
 
     @PostMapping("/job/{email}")
