@@ -64,6 +64,12 @@ public class BFFController {
         bffService.logout(logoutRequest);
     }
 
+    @PutMapping("/auth/user/{id}")
+    public void updateUser(@PathVariable String id, @RequestBody User user){
+        log.info("User updated: " + id);
+        bffService.updateUser(id, user);
+    }
+
     // ----- JOB -----
 
     @PostMapping("/job/{email}")

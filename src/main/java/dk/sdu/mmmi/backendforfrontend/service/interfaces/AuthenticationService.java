@@ -13,4 +13,6 @@ public interface AuthenticationService {
     void register(User user);
 
     User getUser(String userId);
+
+    void updateUser(String id, User user);
 }
