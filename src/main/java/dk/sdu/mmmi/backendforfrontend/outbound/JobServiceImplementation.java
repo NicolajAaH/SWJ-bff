@@ -108,8 +108,7 @@ public class JobServiceImplementation implements JobService {
             return new PageImpl<>(Collections.emptyList(), PageRequest.of(pageNumber, pageSize), 0);
         }
 
-        List<Job> jobs = response.getBody().getContent();
-        return new PageImpl<>(jobs, PageRequest.of(pageNumber, pageSize), jobs.size());
+        return response.getBody();
     }
 
 
