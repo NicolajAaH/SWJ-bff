@@ -9,6 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CustomPageImpl<T> extends PageImpl<T> {
+        private int totalPages;
+        private boolean last;
+
+        private boolean first;
         @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
         public CustomPageImpl(@JsonProperty("content") List<T> content,
                                  @JsonProperty("number") int number,
@@ -22,6 +26,9 @@ public class CustomPageImpl<T> extends PageImpl<T> {
                                  @JsonProperty("empty") boolean empty) {
 
             super(content, PageRequest.of(number, size), totalElements);
+            this.totalPages = totalPages;
+            this.last = last;
+            this.first = first;
         }
 
         public CustomPageImpl(List<T> content, Pageable pageable, long total) {
