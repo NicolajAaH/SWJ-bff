@@ -29,9 +29,9 @@ public interface JobService {
 
     List<Application> getApplicationsForUser(String userId);
 
-    List<Job> searchJobs(String searchTerm);
+    Page<Job> searchJobs(String searchTerm, int pageNumber, int pageSize);
 
-    List<Job> filterJobs(Map<String, String> allRequestParams);
+    Page<Job> filterJobs(Map<String, String> allRequestParams, int pageNumber, int pageSize);
 
     void update(Long id, Job job);
 }

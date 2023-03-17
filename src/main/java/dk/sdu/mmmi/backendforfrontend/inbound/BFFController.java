@@ -131,21 +131,32 @@ public class BFFController {
 
 
     @GetMapping("/job/search/{searchTerm}")
-    public ResponseEntity<List<Job>> searchJobs(@PathVariable("searchTerm") String searchTerm) {
-        log.info("Search jobs: " + searchTerm);
-        List<Job> jobs = bffService.searchJobs(searchTerm);
-        if (jobs.isEmpty()) {
-            return new ResponseEntity<>(Collections.emptyList(), HttpStatus.NO_CONTENT);
+    public ResponseEntity<Page<Job>> searchJobs(@PathVariable("searchTerm") String searchTerm,
+            @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size
+    ) {
+        log.info("Search all jobs with pagination (page={}, size={}) and search {}", page, size, searchTerm);
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Job> jobs = bffService.searchJobs(searchTerm, pageable);
+        if (!jobs.hasContent()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(jobs, HttpStatus.OK);
     }
 
     @GetMapping("/job/filter")
-    public ResponseEntity<List<Job>> filterJobs(@RequestParam Map<String, String> allRequestParams) {
-        log.info("Filter jobs: " + allRequestParams);
-        List<Job> jobs = bffService.filterJobs(allRequestParams);
-        if (jobs.isEmpty()) {
-            return new ResponseEntity<>(Collections.emptyList(), HttpStatus.NO_CONTENT);
+    public ResponseEntity<Page<Job>> filterJobs(@RequestParam Map<String, String> allRequestParams,
+                                                @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size
+    ) {
+        log.info("Filter all jobs with pagination (page={}, size={})", page, size);
+        log.info("Filter all jobs with params: " + allRequestParams);
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Job> jobs = bffService.filterJobs(allRequestParams, pageable);
+        if (!jobs.hasContent()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(jobs, HttpStatus.OK);
     }

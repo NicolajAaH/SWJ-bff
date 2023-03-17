@@ -95,20 +95,7 @@ public class JobServiceImplementation implements JobService {
                 .queryParam("page", pageNumber)
                 .queryParam("size", pageSize);
 
-        ParameterizedTypeReference<CustomPageImpl<Job>> responseType = new ParameterizedTypeReference<CustomPageImpl<Job>>() {};
-        ResponseEntity<CustomPageImpl<Job>> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, responseType);
-
-        if(!response.getStatusCode().is2xxSuccessful()){
-            log.error("Error getting jobs: {}", response.getStatusCode());
-            return null;
-        }
-
-        if(response.getBody() == null || response.getBody().getContent() == null || response.getBody().getContent().isEmpty()){
-            log.warn("No jobs found");
-            return new PageImpl<>(Collections.emptyList(), PageRequest.of(pageNumber, pageSize), 0);
-        }
-
-        return response.getBody();
+        return getJobs(pageNumber, pageSize, builder);
     }
 
 
@@ -158,33 +145,25 @@ public class JobServiceImplementation implements JobService {
     }
 
     @Override
-    public List<Job> searchJobs(String searchTerm) {
+    public Page<Job> searchJobs(String searchTerm, int pageNumber, int pageSize) {
         log.info("--> searchJobs: {}", searchTerm);
-        ResponseEntity<Job[]> response = restTemplate.getForEntity(JOB_SERVICE_URL + "/search/" + searchTerm, Job[].class);
-        if(!response.getStatusCode().is2xxSuccessful() || response.getBody() == null){
-            log.error("Error getting jobs: {}", response.getStatusCode());
-            return Collections.emptyList();
-        }
-        if(response.getBody().length == 0){
-            return Collections.emptyList();
-        }
-        return List.of(response.getBody());
+
+        // Build the URL with the pagination parameters
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(JOB_SERVICE_URL + "/search/" + searchTerm)
+                .queryParam("page", pageNumber)
+                .queryParam("size", pageSize);
+
+        return getJobs(pageNumber, pageSize, builder);
     }
 
     @Override
-    public List<Job> filterJobs(Map<String, String> allRequestParams) {
+    public Page<Job> filterJobs(Map<String, String> allRequestParams, int pageNumber, int pageSize) {
         log.info("--> filterJobs: {}", allRequestParams);
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(JOB_SERVICE_URL + "/filter");
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(JOB_SERVICE_URL + "/filter")
+                .queryParam("page", pageNumber)
+                .queryParam("size", pageSize);
         allRequestParams.forEach(builder::queryParam);
-        ResponseEntity<Job[]> response = restTemplate.getForEntity(builder.toUriString(), Job[].class);
-        if(!response.getStatusCode().is2xxSuccessful() || response.getBody() == null){
-            log.error("Error getting jobs: {}", response.getStatusCode());
-            return Collections.emptyList();
-        }
-        if(response.getBody().length == 0){
-            return Collections.emptyList();
-        }
-        return List.of(response.getBody());
+        return getJobs(pageNumber, pageSize, builder);
     }
 
     @Override
@@ -194,6 +173,31 @@ public class JobServiceImplementation implements JobService {
         if(!response.getStatusCode().is2xxSuccessful()){
             log.error("Error updating job: {}", response.getStatusCode());
         }
+    }
+
+
+    /**
+     * Helper method to get the jobs from the response
+     * @param pageNumber page number
+     * @param pageSize page size
+     * @param builder builder with params and URI
+     * @return page of jobs
+     */
+    private Page<Job> getJobs(int pageNumber, int pageSize, UriComponentsBuilder builder) {
+        ParameterizedTypeReference<CustomPageImpl<Job>> responseType = new ParameterizedTypeReference<CustomPageImpl<Job>>() {};
+        ResponseEntity<CustomPageImpl<Job>> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, responseType);
+
+        if(!response.getStatusCode().is2xxSuccessful()){
+            log.error("Error getting jobs: {}", response.getStatusCode());
+            return null;
+        }
+
+        if(response.getBody() == null || response.getBody().getContent() == null || response.getBody().getContent().isEmpty()){
+            log.warn("No jobs found");
+            return new PageImpl<>(Collections.emptyList(), PageRequest.of(pageNumber, pageSize), 0);
+        }
+
+        return response.getBody();
     }
 
 }

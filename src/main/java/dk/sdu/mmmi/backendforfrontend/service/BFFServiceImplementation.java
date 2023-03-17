@@ -143,23 +143,15 @@ public class BFFServiceImplementation implements BFFService {
     }
 
     @Override
-    public List<Job> searchJobs(String searchTerm) {
+    public Page<Job> searchJobs(String searchTerm, Pageable pageable) {
         log.info("Search jobs: " + searchTerm);
-        List<Job> jobs = jobService.searchJobs(searchTerm);
-        if (jobs.isEmpty()) {
-            return Collections.emptyList();
-        }
-        return jobs;
+        return jobService.searchJobs(searchTerm, pageable.getPageNumber(), pageable.getPageSize());
     }
 
     @Override
-    public List<Job> filterJobs(Map<String, String> allRequestParams) {
+    public Page<Job> filterJobs(Map<String, String> allRequestParams, Pageable pageable) {
         log.info("Filter jobs: " + allRequestParams);
-        List<Job> jobs = jobService.filterJobs(allRequestParams);
-        if (jobs.isEmpty()) {
-            return Collections.emptyList();
-        }
-        return jobs;
+        return jobService.filterJobs(allRequestParams, pageable.getPageNumber(), pageable.getPageSize());
     }
 
     @Override
