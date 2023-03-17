@@ -3,6 +3,7 @@ package dk.sdu.mmmi.backendforfrontend.service.interfaces;
 import dk.sdu.mmmi.backendforfrontend.service.model.Application;
 import dk.sdu.mmmi.backendforfrontend.service.model.ApplicationDTO;
 import dk.sdu.mmmi.backendforfrontend.service.model.Job;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Map;
@@ -18,7 +19,7 @@ public interface JobService {
 
     List<Job> getJobsByCompanyId(long id);
 
-    List<Job> getAllJobs();
+    Page<Job> getAllJobs(int pageNumber, int pageSize);
 
     void applyForJob(long id, Application application);
 

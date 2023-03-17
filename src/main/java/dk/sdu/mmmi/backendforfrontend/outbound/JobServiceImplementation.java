@@ -8,6 +8,9 @@ import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -82,15 +85,30 @@ public class JobServiceImplementation implements JobService {
     }
 
     @Override
-    public List<Job> getAllJobs() {
+    public Page<Job> getAllJobs(int pageNumber, int pageSize) {
         log.info("--> getAllJobs");
-        ResponseEntity<Job[]> response = restTemplate.getForEntity(JOB_SERVICE_URL, Job[].class);
+
+        // Build the URL with the pagination parameters
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(JOB_SERVICE_URL)
+                .queryParam("page", pageNumber)
+                .queryParam("size", pageSize);
+
+        ResponseEntity<Job[]> response = restTemplate.getForEntity(builder.toUriString(), Job[].class);
+
         if(!response.getStatusCode().is2xxSuccessful()){
             log.error("Error getting jobs: {}", response.getStatusCode());
             return null;
         }
-        return List.of(response.getBody());
+
+        if(response.getBody() == null){
+            log.warn("No jobs found");
+            return new PageImpl<>(Collections.emptyList(), PageRequest.of(pageNumber, pageSize), 0);
+        }
+
+        List<Job> jobs = List.of(response.getBody());
+        return new PageImpl<>(jobs, PageRequest.of(pageNumber, pageSize), jobs.size());
     }
+
 
     @Override
     public void applyForJob(long id, Application application) {

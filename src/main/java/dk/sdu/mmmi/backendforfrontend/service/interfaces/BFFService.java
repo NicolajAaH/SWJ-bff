@@ -1,6 +1,8 @@
 package dk.sdu.mmmi.backendforfrontend.service.interfaces;
 
 import dk.sdu.mmmi.backendforfrontend.service.model.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Map;
@@ -23,7 +25,7 @@ public interface BFFService {
 
     void applyForJob(long id, Application application);
 
-    List<Job> getAllJobs();
+    Page<Job> getAllJobs(Pageable pageable);
 
     void updateCompany(Company company, Long id);
 

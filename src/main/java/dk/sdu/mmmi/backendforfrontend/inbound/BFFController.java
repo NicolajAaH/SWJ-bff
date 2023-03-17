@@ -4,6 +4,9 @@ import dk.sdu.mmmi.backendforfrontend.service.interfaces.BFFService;
 import dk.sdu.mmmi.backendforfrontend.service.model.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -110,14 +113,22 @@ public class BFFController {
     }
 
     @GetMapping("/job")
-    public ResponseEntity<List<Job>> getAllJobs() { //TODO add pagination
-        log.info("Get all jobs");
-        List<Job> jobs = bffService.getAllJobs();
-        if (jobs == null || jobs.isEmpty()) {
+    public ResponseEntity<Page<Job>> getAllJobs(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size
+    ) {
+        log.info("Get all jobs with pagination (page={}, size={})", page, size);
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Job> jobs = bffService.getAllJobs(pageable);
+
+        if (!jobs.hasContent()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+
         return new ResponseEntity<>(jobs, HttpStatus.OK);
     }
+
 
     @GetMapping("/job/search/{searchTerm}")
     public ResponseEntity<List<Job>> searchJobs(@PathVariable("searchTerm") String searchTerm) {

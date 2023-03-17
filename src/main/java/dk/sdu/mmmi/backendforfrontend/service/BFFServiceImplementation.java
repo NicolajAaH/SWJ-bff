@@ -9,6 +9,8 @@ import dk.sdu.mmmi.backendforfrontend.service.interfaces.JobService;
 import dk.sdu.mmmi.backendforfrontend.service.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Base64;
@@ -98,9 +100,9 @@ public class BFFServiceImplementation implements BFFService {
     }
 
     @Override
-    public List<Job> getAllJobs() { //TODO add pagination
+    public Page<Job> getAllJobs(Pageable pageable) {
         log.info("Get all jobs");
-        return jobService.getAllJobs();
+        return jobService.getAllJobs(pageable.getPageNumber(), pageable.getPageSize());
     }
 
     @Override

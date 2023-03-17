@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -23,6 +24,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doNothing;
@@ -163,6 +165,7 @@ class BFFControllerIntegrationTest {
 
     @Test
     void getAllJobs() throws Exception {
+        when(jobService.getAllJobs(anyInt(), anyInt())).thenReturn(new PageImpl<>(List.of(TestObjects.createMockJob())));
         mockMvc.perform(MockMvcRequestBuilders.get("/api/bff/job")).andExpect(status().is2xxSuccessful());
     }
 
