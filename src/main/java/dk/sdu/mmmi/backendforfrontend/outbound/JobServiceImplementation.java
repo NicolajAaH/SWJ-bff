@@ -1,8 +1,6 @@
 package dk.sdu.mmmi.backendforfrontend.outbound;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import dk.sdu.mmmi.backendforfrontend.outbound.helper.CustomPageImpl;
-import dk.sdu.mmmi.backendforfrontend.outbound.helper.HelperPage;
 import dk.sdu.mmmi.backendforfrontend.service.interfaces.JobService;
 import dk.sdu.mmmi.backendforfrontend.service.model.Application;
 import dk.sdu.mmmi.backendforfrontend.service.model.ApplicationDTO;
