@@ -95,7 +95,8 @@ public class JobServiceImplementation implements JobService {
                 .queryParam("page", pageNumber)
                 .queryParam("size", pageSize);
 
-        ResponseEntity<CustomPageImpl<Job>> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, new ParameterizedTypeReference<CustomPageImpl<Job>>(){});
+        ParameterizedTypeReference<CustomPageImpl<Job>> responseType = new ParameterizedTypeReference<CustomPageImpl<Job>>() {};
+        ResponseEntity<CustomPageImpl<Job>> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, responseType);
 
         if(!response.getStatusCode().is2xxSuccessful()){
             log.error("Error getting jobs: {}", response.getStatusCode());
