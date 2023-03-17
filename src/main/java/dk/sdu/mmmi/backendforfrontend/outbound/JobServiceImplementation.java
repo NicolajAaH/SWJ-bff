@@ -1,5 +1,7 @@
 package dk.sdu.mmmi.backendforfrontend.outbound;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import dk.sdu.mmmi.backendforfrontend.outbound.helper.CustomPageImpl;
 import dk.sdu.mmmi.backendforfrontend.outbound.helper.HelperPage;
 import dk.sdu.mmmi.backendforfrontend.service.interfaces.JobService;
 import dk.sdu.mmmi.backendforfrontend.service.model.Application;
@@ -95,7 +97,7 @@ public class JobServiceImplementation implements JobService {
                 .queryParam("page", pageNumber)
                 .queryParam("size", pageSize);
 
-        ResponseEntity<HelperPage> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, HelperPage.class);
+        ResponseEntity<CustomPageImpl<Job>> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, new ParameterizedTypeReference<CustomPageImpl<Job>>(){});
 
         if(!response.getStatusCode().is2xxSuccessful()){
             log.error("Error getting jobs: {}", response.getStatusCode());
