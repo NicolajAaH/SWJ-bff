@@ -93,7 +93,8 @@ public class JobServiceImplementation implements JobService {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(JOB_SERVICE_URL)
                 .queryParam("page", pageNumber)
                 .queryParam("size", pageSize);
-        ResponseEntity<Page<Job>> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, new ParameterizedTypeReference<Page<Job>>(){});
+
+        ResponseEntity<PageImpl<Job>> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, new ParameterizedTypeReference<PageImpl<Job>>() {});
 
         if(!response.getStatusCode().is2xxSuccessful()){
             log.error("Error getting jobs: {}", response.getStatusCode());
