@@ -1,5 +1,6 @@
 package dk.sdu.mmmi.backendforfrontend.outbound;
 
+import dk.sdu.mmmi.backendforfrontend.outbound.helper.HelperPage;
 import dk.sdu.mmmi.backendforfrontend.service.interfaces.JobService;
 import dk.sdu.mmmi.backendforfrontend.service.model.Application;
 import dk.sdu.mmmi.backendforfrontend.service.model.ApplicationDTO;
@@ -94,7 +95,7 @@ public class JobServiceImplementation implements JobService {
                 .queryParam("page", pageNumber)
                 .queryParam("size", pageSize);
 
-        ResponseEntity<PageImpl<Job>> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, new ParameterizedTypeReference<PageImpl<Job>>() {});
+        ResponseEntity<HelperPage> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, HelperPage.class);
 
         if(!response.getStatusCode().is2xxSuccessful()){
             log.error("Error getting jobs: {}", response.getStatusCode());
