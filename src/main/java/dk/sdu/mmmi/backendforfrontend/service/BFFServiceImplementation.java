@@ -112,6 +112,12 @@ public class BFFServiceImplementation implements BFFService {
     }
 
     @Override
+    public void updateCompany(Company company, String email) {
+        log.info("Company updated: " + company);
+        companyService.update(email, company);
+    }
+
+    @Override
     public List<ApplicationDTO> getApplicationsForJob(long id) {
         log.info("Get applications for job: " + id);
         List<Application> applications = jobService.getApplicationsForJob(id);

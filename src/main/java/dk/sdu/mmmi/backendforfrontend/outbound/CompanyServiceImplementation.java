@@ -72,6 +72,18 @@ public class CompanyServiceImplementation implements CompanyService {
     }
 
     @Override
+    public Company update(String email, Company company) {
+        log.info("--> update: {}", company);
+        company.setUpdatedAt(new Date());
+        ResponseEntity<Company> response = restTemplate.exchange(COMPANY_SERVICE_URL + "/byEmail/" + email, HttpMethod.PUT, new HttpEntity<>(company), Company.class);
+        if(!response.getStatusCode().is2xxSuccessful()){
+            log.error("Error updating job: {}", response.getStatusCode());
+            return null;
+        }
+        return response.getBody();
+    }
+
+    @Override
     public void delete(Long id) {
         log.info("--> delete: {}", id);
         restTemplate.delete(COMPANY_SERVICE_URL + "/" + id);

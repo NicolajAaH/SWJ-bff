@@ -29,6 +29,8 @@ public interface BFFService {
 
     void updateCompany(Company company, Long id);
 
+    void updateCompany(Company company, String email);
+
     List<ApplicationDTO> getApplicationsForJob(long id);
 
     void updateApplication(ApplicationDTO application, Long id);

@@ -41,6 +41,13 @@ public class BFFController {
         bffService.updateCompany(company, id);
     }
 
+    @PutMapping("company/{email}")
+    public ResponseEntity<Void> updateCompany(@RequestBody Company company, @PathVariable String email) {
+        log.info("Company updated: " + company);
+        bffService.updateCompany(company, email);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @PostMapping("/companies/register")
     public void registerCompany(@RequestBody Company company) {
         log.info("Company registered: " + company);
