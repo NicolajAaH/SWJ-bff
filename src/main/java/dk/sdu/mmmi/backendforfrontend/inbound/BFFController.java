@@ -35,13 +35,13 @@ public class BFFController {
         return new ResponseEntity<>(company, HttpStatus.OK);
     }
 
-    @PutMapping("company/{id}")
+    @PutMapping("/company/{id}")
     public void updateCompany(@RequestBody Company company, @PathVariable Long id) {
         log.info("Company updated: " + company);
         bffService.updateCompany(company, id);
     }
 
-    @PutMapping("company/{email}")
+    @PutMapping("/company/byEmail/{email}")
     public ResponseEntity<Void> updateCompany(@RequestBody Company company, @PathVariable String email) {
         log.info("Company updated: " + company);
         bffService.updateCompany(company, email);
