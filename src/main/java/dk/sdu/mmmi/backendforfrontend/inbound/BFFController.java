@@ -146,11 +146,31 @@ public class BFFController {
     }
 
     @GetMapping("/job/filter")
-    public ResponseEntity<Page<Job>> filterJobs(@RequestParam Map<String, String> allRequestParams,
-                                                @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size
-    ) {
-        log.info("Filter all jobs with pagination (page={}, size={})", page, size);
+    public ResponseEntity<Page<Job>> filterJobs(@RequestParam Map<String, String> allRequestParams) {
         log.info("Filter all jobs with params: " + allRequestParams);
+
+        int page = 0; // Default page is 0
+        int size = 10; // Default size is 10
+        if (allRequestParams.containsKey("page")) {
+            try {
+                page = Integer.parseInt(allRequestParams.get("page"));
+            } catch (NumberFormatException e) {
+                log.error("Page parameter is not a number: " + allRequestParams.get("page"));
+                log.error("Using default page: 0");
+            } finally {
+                allRequestParams.remove("page");
+            }
+        }
+        if (allRequestParams.containsKey("size")) {
+            try {
+                size = Integer.parseInt(allRequestParams.get("size"));
+            } catch (NumberFormatException e) {
+                log.error("Size parameter is not a number: " + allRequestParams.get("size"));
+                log.error("Using default size: 10");
+            } finally {
+                allRequestParams.remove("size");
+            }
+        }
 
         Pageable pageable = PageRequest.of(page, size);
 
