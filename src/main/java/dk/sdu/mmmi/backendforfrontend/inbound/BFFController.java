@@ -211,6 +211,15 @@ public class BFFController {
     public ResponseEntity<List<ApplicationDTO>> getApplicationsForUser(@PathVariable("userId") String userId) {
         log.info("Get applications for user: " + userId);
         List<ApplicationDTO> applications = bffService.getApplicationsForUser(userId);
+        if (applications == null) {
+            return new ResponseEntity<>(Collections.emptyList(), HttpStatus.INTERNAL_SERVER_ERROR); //Something went wrong in the API call
+        }
+        if (applications.isEmpty()) {
+            return new ResponseEntity<>(Collections.emptyList(), HttpStatus.NO_CONTENT);
+        }
+        for (ApplicationDTO application : applications) {
+            application.setJob(bffService.getJobWithCompany(application.getJobId()));
+        }
         return new ResponseEntity<>(applications, HttpStatus.OK);
     }
 }
