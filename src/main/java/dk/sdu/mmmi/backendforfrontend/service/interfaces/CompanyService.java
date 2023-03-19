@@ -13,6 +13,9 @@ public interface CompanyService {
 
     Company update(Long id, Company company);
 
+    Company update(String email, Company company);
+
+
     void delete(Long id);
 
     Company getCompanyByEmail(String email);

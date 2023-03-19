@@ -13,6 +13,10 @@ public class JWT {
 
     private String role;
 
+    private Integer phone;
+
+    private String name;
+
     private String iat;
 
     private String exp;

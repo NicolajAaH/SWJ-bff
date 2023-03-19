@@ -1,4 +1,4 @@
-package dk.sdu.mmmi.backendforfrontend.service;
+package dk.sdu.mmmi.backendforfrontend.outbound;
 
 import dk.sdu.mmmi.backendforfrontend.service.interfaces.CompanyService;
 import dk.sdu.mmmi.backendforfrontend.service.model.Company;
@@ -64,6 +64,18 @@ public class CompanyServiceImplementation implements CompanyService {
         log.info("--> update: {}", company);
         company.setUpdatedAt(new Date());
         ResponseEntity<Company> response = restTemplate.exchange(COMPANY_SERVICE_URL + "/" + id, HttpMethod.PUT, new HttpEntity<>(company), Company.class);
+        if(!response.getStatusCode().is2xxSuccessful()){
+            log.error("Error updating job: {}", response.getStatusCode());
+            return null;
+        }
+        return response.getBody();
+    }
+
+    @Override
+    public Company update(String email, Company company) {
+        log.info("--> update: {}", company);
+        company.setUpdatedAt(new Date());
+        ResponseEntity<Company> response = restTemplate.exchange(COMPANY_SERVICE_URL + "/byEmail/" + email, HttpMethod.PUT, new HttpEntity<>(company), Company.class);
         if(!response.getStatusCode().is2xxSuccessful()){
             log.error("Error updating job: {}", response.getStatusCode());
             return null;

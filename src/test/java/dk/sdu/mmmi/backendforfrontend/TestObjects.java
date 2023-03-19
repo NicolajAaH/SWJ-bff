@@ -2,6 +2,8 @@ package dk.sdu.mmmi.backendforfrontend;
 
 import dk.sdu.mmmi.backendforfrontend.service.model.*;
 
+import java.util.Date;
+
 public class TestObjects {
 
     public static Job createMockJob(){
@@ -26,6 +28,7 @@ public class TestObjects {
         company.setCreatedAt(new java.util.Date());
         company.setUpdatedAt(new java.util.Date());
         company.setId(1L);
+        company.setPhone(12345678);
         return company;
     }
 
@@ -35,6 +38,8 @@ public class TestObjects {
         user.setEmail("test@email.dk");
         user.setRole(UserRole.APPLICANT);
         user.setPassword("password");
+        user.setPhone(12345678);
+        user.setCreatedAt(new Date());
         return user;
     }
 
@@ -48,9 +53,6 @@ public class TestObjects {
     public static Application createMockApplication() {
         Application application = new Application();
         application.setJobId(1L);
-        //"email": "test@email",
-        //  "userId": "123123dkk",
-        //  "role": "FRONTEND",
         application.setUserId("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAZW1haWwiLCJ1c2VySWQiOiIxMjMxMjNka2siLCJyb2xlIjoiRlJPTlRFTkQiLCJpYXQiOjE1MTYyMzkwMjJ9.d53lOw8k51us5bwR7vpKFCvmPBgdG38ND_xbpZ6oFkQ");
         application.setCreatedAt(new java.util.Date());
         application.setUpdatedAt(new java.util.Date());
