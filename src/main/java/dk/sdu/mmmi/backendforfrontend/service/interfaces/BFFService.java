@@ -46,4 +46,6 @@ public interface BFFService {
     void updateUser(String id, User user);
 
     User getUser(String id);
+
+    void deleteUser(String id);
 }

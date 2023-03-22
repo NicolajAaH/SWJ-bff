@@ -86,6 +86,12 @@ public class BFFController {
         return bffService.getUser(id);
     }
 
+    @DeleteMapping("/auth/user/{id}")
+    public void deleteUser(@PathVariable String id){
+        log.info("Delete user: " + id);
+        bffService.deleteUser(id);
+    }
+
     // ----- JOB -----
 
     @PostMapping("/job/{email}")

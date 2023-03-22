@@ -15,4 +15,6 @@ public interface AuthenticationService {
     User getUser(String userId);
 
     void updateUser(String id, User user);
+
+    void deleteUser(String id);
 }

@@ -178,6 +178,13 @@ public class BFFServiceImplementation implements BFFService {
         return authenticationService.getUser(id);
     }
 
+    @Override
+    public void deleteUser(String id) {
+        log.info("deleteUser({})", id);
+        authenticationService.deleteUser(id);
+        //TODO do other things related to the user need to be deleted? What about when it is a company?
+    }
+
 
     //Helper methods
     private List<ApplicationDTO> mapApplicationToApplicationDTOsWithUsers(List<Application> applications) {
