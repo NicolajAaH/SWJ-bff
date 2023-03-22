@@ -16,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -201,6 +202,12 @@ class BFFControllerIntegrationTest {
     void getApplicationsForJobNull() throws Exception {
         when(jobService.getApplicationsForJob(anyLong())).thenReturn(null);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/bff/job/1/applications")).andExpect(status().is5xxServerError());
+    }
+
+    @Test
+    @DirtiesContext
+    void deleteUser() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/bff/auth/user/1")).andExpect(status().isOk());
     }
 
 }
