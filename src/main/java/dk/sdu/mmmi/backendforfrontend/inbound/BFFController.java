@@ -35,6 +35,18 @@ public class BFFController {
         return new ResponseEntity<>(company, HttpStatus.OK);
     }
 
+    @GetMapping("/company/{id}")
+    public ResponseEntity<Company> getCompany(@PathVariable("id") Long id) {
+        log.info("Get company: " + id);
+        Company company = bffService.getCompany(id);
+
+        if (company == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(company, HttpStatus.OK);
+    }
+
     @PutMapping("/company/{id}")
     public void updateCompany(@RequestBody Company company, @PathVariable Long id) {
         log.info("Company updated: " + company);

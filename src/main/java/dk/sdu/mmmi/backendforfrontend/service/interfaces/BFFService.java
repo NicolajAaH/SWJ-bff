@@ -48,4 +48,6 @@ public interface BFFService {
     User getUser(String id);
 
     void deleteUser(String id);
+
+    Company getCompany(Long id);
 }
