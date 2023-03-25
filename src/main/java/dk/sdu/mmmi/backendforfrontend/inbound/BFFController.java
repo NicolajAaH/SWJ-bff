@@ -35,7 +35,12 @@ public class BFFController {
         return new ResponseEntity<>(company, HttpStatus.OK);
     }
 
-    @GetMapping("/company/{id}")
+    /**
+     * Get company by id with all its jobs
+     * @param id company id
+     * @return company with jobs
+     */
+    @GetMapping("/company/byId/{id}")
     public ResponseEntity<Company> getCompany(@PathVariable("id") Long id) {
         log.info("Get company: " + id);
         Company company = bffService.getCompany(id);

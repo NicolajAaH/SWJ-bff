@@ -55,17 +55,17 @@ class BFFControllerIntegrationTest {
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
-    void getCompany() throws Exception {
+    void getCompanyEmail() throws Exception {
         String email = "test@test.dk";
         when(companyService.findByEmail(anyString())).thenReturn(TestObjects.createMockCompany());
         mockMvc.perform(MockMvcRequestBuilders.get("/api/bff/company/" + email)).andExpect(status().is2xxSuccessful());
     }
 
     @Test
-    void getCompanyNull() throws Exception {
-        long id = 1;
+    void getCompanyNullEmail() throws Exception {
+        String wrongEmail = "wrongMail";
         when(companyService.findById(anyLong())).thenReturn(null);
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/bff/company/" + id)).andExpect(status().is4xxClientError());
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/bff/company/" + wrongEmail)).andExpect(status().is4xxClientError());
     }
 
     @Test
@@ -208,6 +208,21 @@ class BFFControllerIntegrationTest {
     @DirtiesContext
     void deleteUser() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/bff/auth/user/1")).andExpect(status().isOk());
+    }
+
+    @Test
+    void getCompany() throws Exception {
+        when(companyService.findById(anyLong())).thenReturn(TestObjects.createMockCompany());
+        when(jobService.getJobsByCompanyId(anyLong())).thenReturn(new ArrayList<>(){{
+            TestObjects.createMockJob();
+        }});
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/bff/company/byId/" + 1)).andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    void getCompanyNull() throws Exception {
+        when(companyService.findById(anyLong())).thenReturn(null);
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/bff/company/byId/" + 999)).andExpect(status().is4xxClientError());
     }
 
 }
