@@ -13,8 +13,6 @@ public interface JobService {
 
     Job getJob(long id);
 
-    Job updateJob(long id, Job job);
-
     void deleteJob(long id);
 
     List<Job> getJobsByCompanyId(long id);

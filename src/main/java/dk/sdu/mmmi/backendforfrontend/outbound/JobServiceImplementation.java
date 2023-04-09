@@ -54,18 +54,6 @@ public class JobServiceImplementation implements JobService {
         }
         return response.getBody();
     }
-
-    @Override
-    public Job updateJob(long id, Job job) {
-        log.info("--> updateJob: {}", job);
-        ResponseEntity<Job> response = restTemplate.exchange(JOB_SERVICE_URL + "/" + id, HttpMethod.PUT, new HttpEntity<>(job), Job.class);
-        if(!response.getStatusCode().is2xxSuccessful()){
-            log.error("Error updating job: {}", response.getStatusCode());
-            return null;
-        }
-        return response.getBody();
-    }
-
     @Override
     public void deleteJob(long id) {
         log.info("--> deleteJob: {}", id);

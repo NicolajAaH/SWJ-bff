@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: bff-service-deployment
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: bff-service
@@ -24,6 +24,13 @@ spec:
               value: http://authentication-service:3000
             - name: URL_COMPANYSERVICE
               value: http://company-service:8080/api/companies
+          resources:
+            limits:  
+              cpu: "500m"
+              memory: "500Mi"
+            requests:  
+              cpu: "500m"
+              memory: "500Mi"
 ---
 apiVersion: v1
 kind: Service
