@@ -93,6 +93,10 @@ public class BFFServiceImplementation implements BFFService {
         if (job == null) {
             throw new RuntimeException("Job not found");
         }
+        if (job.getExpiresAt().before(new Date())) {
+            log.error("Job expired - date: {}", job.getExpiresAt());
+            throw new RuntimeException("Job expired");
+        }
         jobService.applyForJob(id, application);
     }
 

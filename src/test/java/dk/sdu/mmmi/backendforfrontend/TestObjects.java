@@ -17,7 +17,8 @@ public class TestObjects {
         job.setCreatedAt(new java.util.Date());
         job.setCompanyId(1L);
         job.setId(1L);
-        job.setExpiresAt(new java.util.Date());
+        Date date = Date.from(new java.util.Date().toInstant().plusSeconds(1000000000));
+        job.setExpiresAt(date);
         job.setUpdatedAt(new java.util.Date());
         return job;
     }
