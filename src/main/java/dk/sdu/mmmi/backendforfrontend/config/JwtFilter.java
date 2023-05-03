@@ -33,7 +33,7 @@ public class JwtFilter extends OncePerRequestFilter {
         final String authHeader = request.getHeader("Authorization");
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            final String token = authHeader.substring(7);
+            final String token = authHeader.split(" ")[1].trim(); //Only want part after Bearer
             try {
                 Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
                 Date expirationDate = claims.getExpiration();
