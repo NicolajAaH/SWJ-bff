@@ -24,6 +24,11 @@ spec:
               value: http://authentication-service:3000
             - name: URL_COMPANYSERVICE
               value: http://company-service:8080/api/companies
+            - name: SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: jwtsecret
+                  key: secret
           resources:
             limits:  
               cpu: "500m"
@@ -44,3 +49,11 @@ spec:
       port: 8080
       targetPort: 8080
   type: ClusterIP
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: jwtsecret
+type: Opaque
+data:
+  secret: VDlGakFpa2ZPNDk4bkM1bmZOaEw=
