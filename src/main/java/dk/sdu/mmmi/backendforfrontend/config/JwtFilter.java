@@ -18,11 +18,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 
 @Slf4j
-//@Component
 public class JwtFilter extends OncePerRequestFilter {
 
     @Value("${secret}")
@@ -34,7 +32,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             final String token = authHeader.split(" ")[1].trim(); //Only want part after Bearer
-            log.warn(token);
             try {
                 Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
                 Date expirationDate = claims.getExpiration();
