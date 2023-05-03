@@ -3,6 +3,7 @@ package dk.sdu.mmmi.backendforfrontend;
 import dk.sdu.mmmi.backendforfrontend.service.model.*;
 
 import java.util.Date;
+import java.util.List;
 
 public class TestObjects {
 
@@ -16,7 +17,8 @@ public class TestObjects {
         job.setCreatedAt(new java.util.Date());
         job.setCompanyId(1L);
         job.setId(1L);
-        job.setExpiresAt(new java.util.Date());
+        Date date = Date.from(new java.util.Date().toInstant().plusSeconds(1000000000));
+        job.setExpiresAt(date);
         job.setUpdatedAt(new java.util.Date());
         return job;
     }
@@ -43,13 +45,6 @@ public class TestObjects {
         return user;
     }
 
-    public static LoginRequest createMockLoginRequest() {
-        LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setEmail("test@email.dk");
-        loginRequest.setPassword("password");
-        return loginRequest;
-    }
-
     public static Application createMockApplication() {
         Application application = new Application();
         application.setJobId(1L);
@@ -64,5 +59,32 @@ public class TestObjects {
         LogoutRequest logoutRequest = new LogoutRequest();
         logoutRequest.setToken("token");
         return logoutRequest;
+    }
+
+    public static TokenResponse createMockTokenResponse() {
+        TokenResponse tokenResponse = new TokenResponse();
+        tokenResponse.setToken("token");
+        return tokenResponse;
+    }
+
+    public static LoginRequest createMockLoginRequest() {
+        LoginRequest loginRequest = new LoginRequest();
+        loginRequest.setEmail("test@test.dk");
+        loginRequest.setPassword("TestPass123!");
+        return loginRequest;
+    }
+
+    public static List<Job> createMockJobList() {
+        return List.of(createMockJob());
+    }
+
+    public static ApplicationDTO createMockApplicationDTO() {
+        ApplicationDTO applicationDTO = new ApplicationDTO();
+        applicationDTO.setJobId(1L);
+        applicationDTO.setUserId("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAZW1haWwuZGsiLCJ1c2VySWQiOiJ1c2VyaWR0ZXN0Iiwicm9sZSI6IkZST05URU5EIiwiaWF0IjoxNTE2MjM5MDIyfQ.4rZ0aKZckqZ8Mqae02lbar-2jNEk6G4Za2tyCKDu-G4");
+        applicationDTO.setCreatedAt(new Date());
+        applicationDTO.setUpdatedAt(new Date());
+        applicationDTO.setId(1L);
+        return applicationDTO;
     }
 }

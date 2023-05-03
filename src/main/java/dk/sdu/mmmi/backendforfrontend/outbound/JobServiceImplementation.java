@@ -54,18 +54,6 @@ public class JobServiceImplementation implements JobService {
         }
         return response.getBody();
     }
-
-    @Override
-    public Job updateJob(long id, Job job) {
-        log.info("--> updateJob: {}", job);
-        ResponseEntity<Job> response = restTemplate.exchange(JOB_SERVICE_URL + "/" + id, HttpMethod.PUT, new HttpEntity<>(job), Job.class);
-        if(!response.getStatusCode().is2xxSuccessful()){
-            log.error("Error updating job: {}", response.getStatusCode());
-            return null;
-        }
-        return response.getBody();
-    }
-
     @Override
     public void deleteJob(long id) {
         log.info("--> deleteJob: {}", id);
@@ -81,8 +69,12 @@ public class JobServiceImplementation implements JobService {
         ResponseEntity<Job[]> response = restTemplate.getForEntity(JOB_SERVICE_URL + "/companies/" + id, Job[].class);
         if(!response.getStatusCode().is2xxSuccessful()){
             log.error("Error getting jobs: {}", response.getStatusCode());
-            return null;
+            return Collections.emptyList();
         }
+        if(response.getBody() == null || response.getBody().length == 0){
+            return Collections.emptyList();
+        }
+
         return List.of(response.getBody());
     }
 

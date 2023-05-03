@@ -66,4 +66,10 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
         log.info("--> updateUser: {}", user);
         restTemplate.put(AUTHENTICATION_SERVICE_URL + "/user/" + id, user);
     }
+
+    @Override
+    public void deleteUser(String id) {
+        log.info("--> deleteUser: {}", id);
+        restTemplate.delete(AUTHENTICATION_SERVICE_URL + "/user/" + id);
+    }
 }

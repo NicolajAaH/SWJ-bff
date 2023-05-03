@@ -13,10 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Base64;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -95,6 +92,10 @@ public class BFFServiceImplementation implements BFFService {
         Job job = jobService.getJob(id);
         if (job == null) {
             throw new RuntimeException("Job not found");
+        }
+        if (job.getExpiresAt().before(new Date())) {
+            log.error("Job expired - date: {}", job.getExpiresAt());
+            throw new RuntimeException("Job expired");
         }
         jobService.applyForJob(id, application);
     }
@@ -176,6 +177,31 @@ public class BFFServiceImplementation implements BFFService {
     public User getUser(String id) {
         log.info("getUser({})", id);
         return authenticationService.getUser(id);
+    }
+
+    @Override
+    public void deleteUser(String id) {
+        log.info("deleteUser({})", id);
+        authenticationService.deleteUser(id);
+        //TODO do other things related to the user need to be deleted? What about when it is a company?
+    }
+
+    @Override
+    public Company getCompany(Long id) {
+        log.info("getCompany({})", id);
+        Company company = companyService.findById(id);
+        if(company == null) {
+            log.error("Received null from companyService.findById(id)");
+            return null;
+        }
+        //Fetch jobs related to the company
+        List<Job> jobs = jobService.getJobsByCompanyId(id);
+        if(jobs == null) {
+            log.error("Received null from jobService.getJobsByCompanyId(id)");
+            return company;
+        }
+        company.setJobs(new HashSet<>(jobs));
+        return company;
     }
 
 

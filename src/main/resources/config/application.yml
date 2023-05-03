@@ -3,5 +3,7 @@ url:
   companyservice: http://localhost:8082/api/companies
   authenticationservice: http://localhost:3000
 
+secret: c2VjcmV0X2VuY29kZWRfaW5fYmFzZTY0X3JhbmRvbV9sZXR0ZXJz #Will be overwritten - it is only for testing purposes
+
 server:
   port: 8080

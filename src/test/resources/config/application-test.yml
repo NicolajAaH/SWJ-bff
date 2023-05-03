@@ -3,3 +3,6 @@ spring:
   config:
     activate:
       on-profile: test
+
+jwt:
+  secret: secret
