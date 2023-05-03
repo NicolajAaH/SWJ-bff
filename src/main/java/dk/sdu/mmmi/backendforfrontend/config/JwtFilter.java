@@ -34,6 +34,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             final String token = authHeader.split(" ")[1].trim(); //Only want part after Bearer
+            log.warn(token);
             try {
                 Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
                 Date expirationDate = claims.getExpiration();
@@ -51,6 +52,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 log.error("Exception occurred while processing JWT token", e);
             }
         } else{
+            log.info("No token registered - creating anonymous user");
             String newToken = Jwts.builder().compact();
             request.setAttribute("id", "0");
             request.setAttribute("role", "ROLE_ANONYMOUS");
