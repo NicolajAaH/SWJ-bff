@@ -9,6 +9,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -53,12 +55,14 @@ public class BFFController {
     }
 
     @PutMapping("/company/{id}")
+    @PreAuthorize("hasAuthority('COMPANY')")
     public void updateCompany(@RequestBody Company company, @PathVariable Long id) {
         log.info("Company updated: " + company);
         bffService.updateCompany(company, id);
     }
 
     @PutMapping("/company/byEmail/{email}")
+    @PreAuthorize("hasAuthority('COMPANY')")
     public ResponseEntity<Void> updateCompany(@RequestBody Company company, @PathVariable String email) {
         log.info("Company updated: " + company);
         bffService.updateCompany(company, email);
@@ -86,24 +90,28 @@ public class BFFController {
     }
 
     @PostMapping("/auth/logout")
+    @PreAuthorize("hasAuthority('COMPANY') || hasAuthority('APPLICANT')")
     public void logout(@RequestBody LogoutRequest logoutRequest) {
         log.info("Company logged out: " + logoutRequest);
         bffService.logout(logoutRequest);
     }
 
     @PutMapping("/auth/user/{id}")
+    @PreAuthorize("#id.equals(authentication.principal.username)")
     public void updateUser(@PathVariable String id, @RequestBody User user){
         log.info("User updated: " + id);
         bffService.updateUser(id, user);
     }
 
     @GetMapping("/auth/user/{id}")
+    @PreAuthorize("#id.equals(authentication.principal.username)")
     public User getUser(@PathVariable String id){
         log.info("Get user: " + id);
         return bffService.getUser(id);
     }
 
     @DeleteMapping("/auth/user/{id}")
+    @PreAuthorize("#id.equals(authentication.principal.username)")
     public void deleteUser(@PathVariable String id){
         log.info("Delete user: " + id);
         bffService.deleteUser(id);
@@ -112,6 +120,7 @@ public class BFFController {
     // ----- JOB -----
 
     @PostMapping("/job/{email}")
+    @PreAuthorize("hasAuthority('COMPANY')")
     public ResponseEntity<Job> postJob(@PathVariable String email, @RequestBody Job job) {
         log.info("Job posted: " + job);
         if(email == null || job == null || email.isEmpty()) {
@@ -136,6 +145,7 @@ public class BFFController {
     }
 
     @PostMapping("/job/{id}/apply")
+    @PreAuthorize("hasAuthority('APPLICANT')")
     public ResponseEntity<Void> applyForJob(@PathVariable("id") long id, @RequestBody Application application) {
         log.info("Apply for job: " + id);
         bffService.applyForJob(id, application);
@@ -143,6 +153,7 @@ public class BFFController {
     }
 
     @GetMapping("/job")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<Page<Job>> getAllJobs(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer size
@@ -161,6 +172,7 @@ public class BFFController {
 
 
     @GetMapping("/job/search/{searchTerm}")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<Page<Job>> searchJobs(@PathVariable("searchTerm") String searchTerm,
             @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size
     ) {
@@ -176,6 +188,7 @@ public class BFFController {
     }
 
     @GetMapping("/job/filter")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<Page<Job>> filterJobs(@RequestParam Map<String, String> allRequestParams) {
         log.info("Filter all jobs with params: " + allRequestParams);
 
@@ -212,6 +225,7 @@ public class BFFController {
     }
 
     @PutMapping("/job/{id}")
+    @PreAuthorize("hasAuthority('COMPANY')")
     public void updateJob(@RequestBody Job job, @PathVariable Long id) {
         log.info("Job updated: " + job);
         bffService.updateJob(job, id);
@@ -219,6 +233,7 @@ public class BFFController {
 
     // ----- APPLICATION -----
     @GetMapping("/job/{id}/applications")
+    @PreAuthorize("hasAuthority('COMPANY')")
     public ResponseEntity<List<ApplicationDTO>> getApplicationsForJob(@PathVariable("id") long id) {
         log.info("Get applications for job: " + id);
         List<ApplicationDTO> applications = bffService.getApplicationsForJob(id);
@@ -232,12 +247,14 @@ public class BFFController {
     }
 
     @PutMapping("/application/{id}")
+    @PreAuthorize("hasAuthority('COMPANY')")
     public void updateApplication(@RequestBody ApplicationDTO application, @PathVariable Long id) {
         log.info("Application updated: " + application);
         bffService.updateApplication(application, id);
     }
 
     @GetMapping("/applications/{userId}")
+    @PreAuthorize("hasAuthority('APPLICANT')")
     public ResponseEntity<List<ApplicationDTO>> getApplicationsForUser(@PathVariable("userId") String userId) {
         log.info("Get applications for user: " + userId);
         List<ApplicationDTO> applications = bffService.getApplicationsForUser(userId);
