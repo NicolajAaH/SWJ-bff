@@ -49,11 +49,3 @@ spec:
       port: 8080
       targetPort: 8080
   type: ClusterIP
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: jwtsecret
-type: Opaque
-data:
-  secret: VDlGakFpa2ZPNDk4bkM1bmZOaEw=
