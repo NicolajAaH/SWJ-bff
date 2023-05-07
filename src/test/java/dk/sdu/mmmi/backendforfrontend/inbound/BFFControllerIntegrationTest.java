@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = BackendForFrontendApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-@ActiveProfiles("test")
+@ActiveProfiles("unitTest")
 class BFFControllerIntegrationTest {
 
     @Autowired
@@ -228,6 +228,17 @@ class BFFControllerIntegrationTest {
     }
 
     @Test
+    void getApplicationsForUser() throws Exception {
+        String jwt = JwtTestUtils.createMockJwt("testuser", "APPLICANT");
+        when(jobService.getApplicationsForJob(anyLong())).thenReturn(new ArrayList<>(){{
+            TestObjects.createMockApplication();
+        }});
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/bff/applications/userId")
+                .header("Authorization", "Bearer " + jwt)
+        ).andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
     void getApplicationsForJobNoApplications() throws Exception {
         when(jobService.getApplicationsForJob(anyLong())).thenReturn(Collections.emptyList());
         String jwt = JwtTestUtils.createMockJwt("testuser", "COMPANY");
@@ -266,6 +277,18 @@ class BFFControllerIntegrationTest {
     void getCompanyNull() throws Exception {
         when(companyService.findById(anyLong())).thenReturn(null);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/bff/company/byId/" + 999)).andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void filterJobs() throws Exception {
+        when(jobService.filterJobs(anyMap(), anyInt(), anyInt())).thenReturn(new PageImpl<>(List.of(TestObjects.createMockJob())));
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/bff/job/filter?location=Denmark&page=0&size=10")).andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    void searchJobs() throws Exception {
+        when(jobService.searchJobs(anyString(), anyInt(), anyInt())).thenReturn(new PageImpl<>(List.of(TestObjects.createMockJob())));
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/bff/job/search/Java?page=0&size=10")).andExpect(status().is2xxSuccessful());
     }
 
 }
