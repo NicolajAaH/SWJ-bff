@@ -5,4 +5,4 @@ spring:
       on-profile: test
 
 jwt:
-  secret: secret
+  secret: secret #Will be overwritten!
