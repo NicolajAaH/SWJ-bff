@@ -78,11 +78,4 @@ class CompanyServiceImplementationTest {
         Company company = companyService.getCompanyByEmail("test@test.dk");
         assertThat(company).isNotNull();
     }
-
-    @Test
-    void findByEmail() {
-        when(restTemplate.getForEntity(anyString(), any())).thenReturn(new ResponseEntity<>(TestObjects.createMockCompany(), HttpStatus.OK));
-        Company company = companyService.findByEmail("test@test.dk");
-        assertThat(company).isNotNull();
-    }
 }

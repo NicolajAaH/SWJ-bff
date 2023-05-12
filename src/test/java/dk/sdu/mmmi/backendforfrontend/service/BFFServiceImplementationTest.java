@@ -47,7 +47,7 @@ class BFFServiceImplementationTest {
 
     @Test
     void getCompany() {
-        when(companyService.findByEmail(anyString())).thenReturn(TestObjects.createMockCompany());
+        when(companyService.getCompanyByEmail(anyString())).thenReturn(TestObjects.createMockCompany());
         Company company = bffService.getCompany("test@test.dk");
         assertThat(company).isNotNull();
         assertThat(company.getName()).isEqualTo(TestObjects.createMockCompany().getName());
@@ -95,7 +95,7 @@ class BFFServiceImplementationTest {
     @Test
     void postJob() {
         when(jobService.createJob(any(Job.class))).thenReturn(TestObjects.createMockJob());
-        when(companyService.findByEmail(anyString())).thenReturn(TestObjects.createMockCompany());
+        when(companyService.getCompanyByEmail(anyString())).thenReturn(TestObjects.createMockCompany());
 
         Job job = bffService.postJob("test@test.dk", TestObjects.createMockJob());
 
@@ -106,7 +106,7 @@ class BFFServiceImplementationTest {
     @Test
     void getJobWithCompany() {
         when(jobService.getJob(anyLong())).thenReturn(TestObjects.createMockJob());
-        when(companyService.findByEmail(anyString())).thenReturn(TestObjects.createMockCompany());
+        when(companyService.getCompanyByEmail(anyString())).thenReturn(TestObjects.createMockCompany());
 
         JobDTO job = bffService.getJobWithCompany(2L);
 
@@ -256,7 +256,7 @@ class BFFServiceImplementationTest {
 
     @Test
     void testGetCompany() {
-        when(companyService.findByEmail(anyString())).thenReturn(TestObjects.createMockCompany());
+        when(companyService.getCompanyByEmail(anyString())).thenReturn(TestObjects.createMockCompany());
 
         Company company = bffService.getCompany("test@company.dk");
 

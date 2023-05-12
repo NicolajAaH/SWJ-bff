@@ -1,6 +1,8 @@
 package dk.sdu.mmmi.backendforfrontend.service;
 
 import com.google.gson.Gson;
+import dk.sdu.mmmi.backendforfrontend.service.exceptions.ExpiredException;
+import dk.sdu.mmmi.backendforfrontend.service.exceptions.NotFoundException;
 import dk.sdu.mmmi.backendforfrontend.service.mapper.DTOMapper;
 import dk.sdu.mmmi.backendforfrontend.service.interfaces.AuthenticationService;
 import dk.sdu.mmmi.backendforfrontend.service.interfaces.BFFService;
@@ -32,7 +34,7 @@ public class BFFServiceImplementation implements BFFService {
     @Override
     public Company getCompany(String email) {
         log.info("Get company: " + email);
-        return companyService.findByEmail(email);
+        return companyService.getCompanyByEmail(email);
     }
 
     @Override
@@ -86,16 +88,16 @@ public class BFFServiceImplementation implements BFFService {
         //UserId is token
         String userId = getUserIdFromToken(application.getUserId());
 
-        //set new userId
+        //set userId
         application.setUserId(userId);
 
         Job job = jobService.getJob(id);
         if (job == null) {
-            throw new RuntimeException("Job not found");
+            throw new NotFoundException("Job not found");
         }
         if (job.getExpiresAt().before(new Date())) {
             log.error("Job expired - date: {}", job.getExpiresAt());
-            throw new RuntimeException("Job expired");
+            throw new ExpiredException("Job expired");
         }
         jobService.applyForJob(id, application);
     }
@@ -124,7 +126,7 @@ public class BFFServiceImplementation implements BFFService {
         List<Application> applications = jobService.getApplicationsForJob(id);
         if(applications == null) {
             log.error("Received null from jobService.getApplicationsForJob(id)");
-            return null;
+            return Collections.emptyList();
         }
         if (applications.isEmpty()) {
             return Collections.emptyList();
@@ -144,7 +146,7 @@ public class BFFServiceImplementation implements BFFService {
         List<Application> applications = jobService.getApplicationsForUser(userId);
         if(applications == null) {
             log.error("Received null from jobService.getApplicationsForUser(userId)");
-            throw new RuntimeException("Applications not found");
+            throw new NotFoundException("Applications not found");
         }
         return mapApplicationToApplicationDTOsWithUsers(applications);
     }
@@ -183,7 +185,6 @@ public class BFFServiceImplementation implements BFFService {
     public void deleteUser(String id) {
         log.info("deleteUser({})", id);
         authenticationService.deleteUser(id);
-        //TODO do other things related to the user need to be deleted? What about when it is a company?
     }
 
     @Override
@@ -205,11 +206,17 @@ public class BFFServiceImplementation implements BFFService {
     }
 
 
-    //Helper methods
+    // ----- Helper methods ------
+
+    /**
+     * Maps a list of applications to a list of applicationDTOs and adds the user to each applicationDTO
+     * @param applications the applications
+     * @return the applicationDTOs
+     */
     private List<ApplicationDTO> mapApplicationToApplicationDTOsWithUsers(List<Application> applications) {
         List<ApplicationDTO> applicationDTOS = applications.stream().map(dtoMapper::toApplicationDTO).toList();
         for (ApplicationDTO applicationDTO : applicationDTOS) {
-            User user = authenticationService.getUser(applicationDTO.getUserId());
+            User user = authenticationService.getUser(applicationDTO.getUserId()); //Get the user from the userId
             applicationDTO.setUser(dtoMapper.toUserDTO(user));
         }
         return applicationDTOS;
@@ -217,15 +224,14 @@ public class BFFServiceImplementation implements BFFService {
 
     /**
      * Extracts the userId from the token
-     *
      * @param token the token
      * @return the userId
      */
     private String getUserIdFromToken(String token) {
-        String[] split_string = token.split("\\.");
-        String base64EncodedBody = split_string[1];
+        String[] splitString = token.split("\\."); //Split at .
+        String base64EncodedBody = splitString[1]; //Get the body
         Base64.Decoder decoder = Base64.getDecoder();
-        String body = new String(decoder.decode(base64EncodedBody));
-        return gson.fromJson(body, JWT.class).getUserId();
+        String body = new String(decoder.decode(base64EncodedBody)); //Decode the body
+        return gson.fromJson(body, JWT.class).getUserId(); //Get the userId from the body
     }
 }

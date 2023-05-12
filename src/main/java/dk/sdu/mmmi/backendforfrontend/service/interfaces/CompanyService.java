@@ -19,6 +19,4 @@ public interface CompanyService {
     void delete(Long id);
 
     Company getCompanyByEmail(String email);
-
-    Company findByEmail(String email);
 }

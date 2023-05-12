@@ -8,6 +8,10 @@ import org.springframework.data.domain.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class is used to deserialize the PageImpl object from the backend
+ * @param <T>
+ */
 public class CustomPageImpl<T> extends PageImpl<T> {
         private int totalPages;
         private boolean last;

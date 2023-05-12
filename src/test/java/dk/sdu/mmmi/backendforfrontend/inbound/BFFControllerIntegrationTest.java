@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -56,7 +57,7 @@ class BFFControllerIntegrationTest {
         String email = "test@test.dk";
         String jwt = JwtTestUtils.createMockJwt("testuser", "COMPANY");
 
-        when(companyService.findByEmail(anyString())).thenReturn(TestObjects.createMockCompany());
+        when(companyService.getCompanyByEmail(anyString())).thenReturn(TestObjects.createMockCompany());
         mockMvc.perform(MockMvcRequestBuilders.get("/api/bff/company/" + email)
                 .header("Authorization", "Bearer " + jwt)
         ).andExpect(status().is2xxSuccessful());
@@ -76,11 +77,12 @@ class BFFControllerIntegrationTest {
                 .contentType("application/json")
                         .header("Authorization", "Bearer " + jwt)
                         .content(objectMapper.writeValueAsString(TestObjects.createMockCompany())))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
 
     @Test
     void getUser() throws Exception {
+        when(authenticationService.getUser(anyString())).thenReturn(TestObjects.createMockUser());
         String jwt = JwtTestUtils.createMockJwt("testuser", "APPLICANT");
         mockMvc.perform(MockMvcRequestBuilders.get("/api/bff/auth/user/12345abc")
                         .header("Authorization", "Bearer " + jwt))
@@ -108,7 +110,7 @@ class BFFControllerIntegrationTest {
                         .header("Authorization", "Bearer " + jwt)
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(TestObjects.createMockUser())))
-                        .andExpect(status().isOk());
+                        .andExpect(status().isCreated());
     }
 
     @Test
@@ -119,6 +121,7 @@ class BFFControllerIntegrationTest {
 
     @Test
     void login() throws Exception{
+        when(authenticationService.login(any())).thenReturn(TestObjects.createMockTokenResponse());
         mockMvc.perform(MockMvcRequestBuilders.post("/api/bff/auth/login")
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(TestObjects.createMockLoginRequest())))
@@ -252,7 +255,7 @@ class BFFControllerIntegrationTest {
         when(jobService.getApplicationsForJob(anyLong())).thenReturn(null);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/bff/job/1/applications")
                 .header("Authorization", "Bearer " + jwt)
-        ).andExpect(status().is5xxServerError());
+        ).andExpect(status().isNoContent());
     }
 
     @Test
@@ -261,7 +264,7 @@ class BFFControllerIntegrationTest {
         String jwt = JwtTestUtils.createMockJwt("testuser", "COMPANY");
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/bff/auth/user/12345abc")
                 .header("Authorization", "Bearer " + jwt)
-        ).andExpect(status().isOk());
+        ).andExpect(status().isNoContent());
     }
 
     @Test
@@ -271,6 +274,30 @@ class BFFControllerIntegrationTest {
             TestObjects.createMockJob();
         }});
         mockMvc.perform(MockMvcRequestBuilders.get("/api/bff/company/byId/" + 1)).andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    @DirtiesContext
+    void updateApplication() throws Exception{
+        doNothing().when(jobService).updateApplication(anyLong(), any());
+        String jwt = JwtTestUtils.createMockJwt("testuser", "COMPANY");
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/bff/application/1")
+                .contentType("application/json")
+                .header("Authorization", "Bearer " + jwt)
+                .content(objectMapper.writeValueAsString(TestObjects.createMockApplication()))
+        ).andExpect(status().isOk());
+    }
+
+    @Test
+    @DirtiesContext
+    void updateJob() throws Exception {
+        doNothing().when(jobService).update(anyLong(), any());
+        String jwt = JwtTestUtils.createMockJwt("testuser", "COMPANY");
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/bff/job/1")
+                .contentType("application/json")
+                .header("Authorization", "Bearer " + jwt)
+                .content(objectMapper.writeValueAsString(TestObjects.createMockJob()))
+        ).andExpect(status().isOk());
     }
 
     @Test
@@ -284,6 +311,19 @@ class BFFControllerIntegrationTest {
         when(jobService.filterJobs(anyMap(), anyInt(), anyInt())).thenReturn(new PageImpl<>(List.of(TestObjects.createMockJob())));
         mockMvc.perform(MockMvcRequestBuilders.get("/api/bff/job/filter?location=Denmark&page=0&size=10")).andExpect(status().is2xxSuccessful());
     }
+
+    @Test
+    void filterJobsNoPageAndSize() throws Exception {
+        when(jobService.filterJobs(anyMap(), anyInt(), anyInt())).thenReturn(new PageImpl<>(List.of(TestObjects.createMockJob())));
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/bff/job/filter?location=Denmark")).andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    void filterJobsNotNumberPageAndSize() throws Exception {
+        when(jobService.filterJobs(anyMap(), anyInt(), anyInt())).thenReturn(new PageImpl<>(List.of(TestObjects.createMockJob())));
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/bff/job/filter?location=Denmark&page=zero&size=five")).andExpect(status().is2xxSuccessful());
+    }
+
 
     @Test
     void searchJobs() throws Exception {
