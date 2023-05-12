@@ -1,0 +1,648 @@
+openapi: "3.0.3"
+info:
+  title: "backendforfrontend API"
+  description: "backendforfrontend API"
+  version: "1.0.0"
+servers:
+  - url: "https://backendforfrontend"
+paths:
+  /api/bff/company/{email}:
+    get:
+      summary: "GET api/bff/company/{email}"
+      operationId: "getCompany"
+      parameters:
+        - name: "email"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResponseEntity"
+  /api/bff/company/byId/{id}:
+    get:
+      summary: "GET api/bff/company/byId/{id}"
+      operationId: "getCompany"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResponseEntity"
+  /api/bff/company/{id}:
+    put:
+      summary: "PUT api/bff/company/{id}"
+      operationId: "updateCompany"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Company"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResponseEntity"
+  /api/bff/company/byEmail/{email}:
+    put:
+      summary: "PUT api/bff/company/byEmail/{email}"
+      operationId: "updateCompany"
+      parameters:
+        - name: "email"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Company"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResponseEntity"
+  /api/bff/companies/register:
+    post:
+      summary: "POST api/bff/companies/register"
+      operationId: "registerCompany"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Company"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResponseEntity"
+  /api/bff/auth/register:
+    post:
+      summary: "POST api/bff/auth/register"
+      operationId: "registerUser"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResponseEntity"
+  /api/bff/auth/login:
+    post:
+      summary: "POST api/bff/auth/login"
+      operationId: "login"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResponseEntity"
+  /api/bff/auth/logout:
+    post:
+      summary: "POST api/bff/auth/logout"
+      operationId: "logout"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LogoutRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResponseEntity"
+  /api/bff/auth/user/{id}:
+    put:
+      summary: "PUT api/bff/auth/user/{id}"
+      operationId: "updateUser"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResponseEntity"
+    get:
+      summary: "GET api/bff/auth/user/{id}"
+      operationId: "getUser"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResponseEntity"
+    delete:
+      summary: "DELETE api/bff/auth/user/{id}"
+      operationId: "deleteUser"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResponseEntity"
+  /api/bff/job/{email}:
+    post:
+      summary: "POST api/bff/job/{email}"
+      operationId: "postJob"
+      parameters:
+        - name: "email"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Job"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResponseEntity"
+  /api/bff/job/{id}:
+    get:
+      summary: "GET api/bff/job/{id}"
+      operationId: "getJobWithCompany"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResponseEntity"
+    put:
+      summary: "PUT api/bff/job/{id}"
+      operationId: "updateJob"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Job"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResponseEntity"
+  /api/bff/job:
+    get:
+      summary: "GET api/bff/job"
+      operationId: "getAllJobs"
+      parameters:
+        - name: "page"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int32"
+            default: "0"
+        - name: "size"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int32"
+            default: "10"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResponseEntity"
+  /api/bff/job/search/{searchTerm}:
+    get:
+      summary: "GET api/bff/job/search/{searchTerm}"
+      operationId: "searchJobs"
+      parameters:
+        - name: "searchTerm"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+        - name: "page"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int32"
+            default: "0"
+        - name: "size"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int32"
+            default: "10"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResponseEntity"
+  /api/bff/job/filter:
+    get:
+      summary: "GET api/bff/job/filter"
+      operationId: "filterJobs"
+      parameters:
+        - name: "allRequestParams"
+          in: "query"
+          required: true
+          schema:
+            type: "object"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResponseEntity"
+  /api/bff/job/{id}/apply:
+    post:
+      summary: "POST api/bff/job/{id}/apply"
+      operationId: "applyForJob"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Application"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResponseEntity"
+  /api/bff/job/{id}/applications:
+    get:
+      summary: "GET api/bff/job/{id}/applications"
+      operationId: "getApplicationsForJob"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResponseEntity"
+  /api/bff/application/{id}:
+    put:
+      summary: "PUT api/bff/application/{id}"
+      operationId: "updateApplication"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApplicationDTO"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResponseEntity"
+  /api/bff/applications/{userId}:
+    get:
+      summary: "GET api/bff/applications/{userId}"
+      operationId: "getApplicationsForUser"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResponseEntity"
+components:
+  schemas:
+    HttpHeaders:
+      type: "object"
+      properties: { }
+    ResponseEntity:
+      type: "object"
+      properties:
+        headers:
+          $ref: "#/components/schemas/HttpHeaders"
+    Job:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        title:
+          type: "string"
+        location:
+          type: "string"
+        description:
+          type: "string"
+        jobType:
+          type: "string"
+          enum:
+            - "FRONTEND"
+            - "BACKEND"
+            - "FULLSTACK"
+            - "ARCHITECT"
+            - "DEVOPS"
+            - "QA"
+            - "MANAGER"
+            - "OTHER"
+        salary:
+          type: "number"
+          format: "double"
+        createdAt:
+          type: "string"
+          format: "date-time"
+        updatedAt:
+          type: "string"
+          format: "date-time"
+        expiresAt:
+          type: "string"
+          format: "date-time"
+        companyId:
+          type: "integer"
+          format: "int64"
+    Company:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        name:
+          type: "string"
+        email:
+          type: "string"
+        website:
+          type: "string"
+        createdAt:
+          type: "string"
+          format: "date-time"
+        updatedAt:
+          type: "string"
+          format: "date-time"
+        phone:
+          type: "integer"
+          format: "int32"
+        jobs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Job"
+    User:
+      type: "object"
+      properties:
+        email:
+          type: "string"
+        password:
+          type: "string"
+        name:
+          type: "string"
+        role:
+          type: "string"
+          enum:
+            - "APPLICANT"
+            - "COMPANY"
+        createdAt:
+          type: "string"
+          format: "date-time"
+        phone:
+          type: "integer"
+          format: "int32"
+    LoginRequest:
+      type: "object"
+      properties:
+        email:
+          type: "string"
+        password:
+          type: "string"
+    LogoutRequest:
+      type: "object"
+      properties:
+        token:
+          type: "string"
+    Application:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        userId:
+          type: "string"
+        status:
+          type: "string"
+          enum:
+            - "PENDING"
+            - "ACCEPTED"
+            - "REJECTED"
+        createdAt:
+          type: "string"
+          format: "date-time"
+        updatedAt:
+          type: "string"
+          format: "date-time"
+        jobId:
+          type: "integer"
+          format: "int64"
+        application:
+          type: "string"
+    UserDTO:
+      type: "object"
+      properties:
+        email:
+          type: "string"
+        name:
+          type: "string"
+        role:
+          type: "string"
+          enum:
+            - "APPLICANT"
+            - "COMPANY"
+        createdAt:
+          type: "string"
+          format: "date-time"
+        phone:
+          type: "integer"
+          format: "int32"
+    JobDTO:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        title:
+          type: "string"
+        location:
+          type: "string"
+        description:
+          type: "string"
+        jobType:
+          type: "string"
+          enum:
+            - "FRONTEND"
+            - "BACKEND"
+            - "FULLSTACK"
+            - "ARCHITECT"
+            - "DEVOPS"
+            - "QA"
+            - "MANAGER"
+            - "OTHER"
+        salary:
+          type: "number"
+          format: "double"
+        createdAt:
+          type: "string"
+          format: "date-time"
+        updatedAt:
+          type: "string"
+          format: "date-time"
+        expiresAt:
+          type: "string"
+          format: "date-time"
+        company:
+          $ref: "#/components/schemas/Company"
+    ApplicationDTO:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        userId:
+          type: "string"
+        user:
+          $ref: "#/components/schemas/UserDTO"
+        status:
+          type: "string"
+          enum:
+            - "PENDING"
+            - "ACCEPTED"
+            - "REJECTED"
+        createdAt:
+          type: "string"
+          format: "date-time"
+        updatedAt:
+          type: "string"
+          format: "date-time"
+        jobId:
+          type: "integer"
+          format: "int64"
+        job:
+          $ref: "#/components/schemas/JobDTO"
+        application:
+          type: "string"
