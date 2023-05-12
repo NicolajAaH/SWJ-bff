@@ -61,6 +61,10 @@ paths:
       responses:
         "200":
           description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResponseEntity"
   /api/bff/company/byEmail/{email}:
     put:
       summary: "PUT api/bff/company/byEmail/{email}"
@@ -97,6 +101,10 @@ paths:
       responses:
         "200":
           description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResponseEntity"
   /api/bff/auth/register:
     post:
       summary: "POST api/bff/auth/register"
@@ -110,6 +118,10 @@ paths:
       responses:
         "200":
           description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResponseEntity"
   /api/bff/auth/login:
     post:
       summary: "POST api/bff/auth/login"
@@ -126,7 +138,7 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: "#/components/schemas/TokenResponse"
+                $ref: "#/components/schemas/ResponseEntity"
   /api/bff/auth/logout:
     post:
       summary: "POST api/bff/auth/logout"
@@ -140,6 +152,10 @@ paths:
       responses:
         "200":
           description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResponseEntity"
   /api/bff/auth/user/{id}:
     put:
       summary: "PUT api/bff/auth/user/{id}"
@@ -159,6 +175,10 @@ paths:
       responses:
         "200":
           description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResponseEntity"
     get:
       summary: "GET api/bff/auth/user/{id}"
       operationId: "getUser"
@@ -174,7 +194,7 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: "#/components/schemas/User"
+                $ref: "#/components/schemas/ResponseEntity"
     delete:
       summary: "DELETE api/bff/auth/user/{id}"
       operationId: "deleteUser"
@@ -187,6 +207,10 @@ paths:
       responses:
         "200":
           description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResponseEntity"
   /api/bff/job/{email}:
     post:
       summary: "POST api/bff/job/{email}"
@@ -243,26 +267,6 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/Job"
-        required: true
-      responses:
-        "200":
-          description: "OK"
-  /api/bff/job/{id}/apply:
-    post:
-      summary: "POST api/bff/job/{id}/apply"
-      operationId: "applyForJob"
-      parameters:
-        - name: "id"
-          in: "path"
-          required: true
-          schema:
-            type: "integer"
-            format: "int64"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Application"
         required: true
       responses:
         "200":
@@ -345,6 +349,30 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/ResponseEntity"
+  /api/bff/job/{id}/apply:
+    post:
+      summary: "POST api/bff/job/{id}/apply"
+      operationId: "applyForJob"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Application"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResponseEntity"
   /api/bff/job/{id}/applications:
     get:
       summary: "GET api/bff/job/{id}/applications"
@@ -383,6 +411,10 @@ paths:
       responses:
         "200":
           description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResponseEntity"
   /api/bff/applications/{userId}:
     get:
       summary: "GET api/bff/applications/{userId}"
@@ -499,11 +531,6 @@ components:
         email:
           type: "string"
         password:
-          type: "string"
-    TokenResponse:
-      type: "object"
-      properties:
-        token:
           type: "string"
     LogoutRequest:
       type: "object"
